@@ -1,34 +1,39 @@
 1. rocket qa
 
-2. bert改进
+2. bert改进 怎么修改hugging face里的模型啊
 
 3. teacher forcing
 
 4. 模型蒸馏
 
-5. transformer-XL, XLNET, ALBERT, RoBERTa DistilBERT
+5. Elmo(Bi-Lstm), transformer-XL, XLNET(transformer-xl), ALBERT, RoBERTa DistilBERT
+
+17-6 transformer 
+18-2 ElMo Bi-lsrm
+18-10 BERT Transformer
+19-1 Transformer-XL Transformer-XL 长距离依赖，训练速度提升
+19-2 GPT-2 Transformer
+19-6 ERNIE Transformer
+19-6 XLNET Transformer-XL 通用的自回归训练方法，预训练框架改进。
+19-7 RoBERTa Transformer 训练方法改进。
+19-9 ALBERT Transformer 比BERT小16倍，性能更高。
+
+
+
+
+6. 自回归 自编码
+
+7. 为什么要用交叉熵啊
+
+8. squad bioasq的数据集格式转换
+
+
+
+
+
 
    
 
-
-
-## Practice
-
-HuggingFace 使用清华源
-
-注意：`transformers > 3.1.0` 的版本支持下面的 `mirror` 选项。
-
-只需在 `from_pretrained` 函数调用中添加 `mirror` 选项，如：
-
-```
-AutoModel.from_pretrained('bert-base-uncased', mirror='tuna')
-```
-
-目前内置的两个来源为 `tuna` 与 `bfsu`。此外，也可以显式提供镜像地址，如：
-
-```
-AutoModel.from_pretrained('bert-base-uncased', mirror='https://mirrors.tuna.tsinghua.edu.cn/hugging-face-models')
-```
 
 
 
@@ -39,5 +44,5 @@ AutoModel.from_pretrained('bert-base-uncased', mirror='https://mirrors.tuna.tsin
 Good:
 
 1. [transformer-XL与XLNet笔记](https://carlos9310.github.io/2019/11/11/transformer-xl-and-xlnet/#transformer-xl)
-2. 
+2. [图解Transformer（完整版](https://mp.weixin.qq.com/s?__biz=MzI4MDYzNzg4Mw==&mid=2247515317&idx=3&sn=d06f49715290c8f8c56144031d1e60b3&chksm=ebb78461dcc00d77b57d12d4ec9388054ffa0e06fa1b2454e9c7f4b785f114983fe4708ecf0a&mpshare=1&scene=1&srcid=10283WjnstRZgfMrxAz3yN6B&sharer_sharetime=1603868715511&sharer_shareid=bce0786e4f1449b9738bd32da860598c&key=3802bbcd5b9ad3c8b1a3d22507849c97d96a6b79ba33afc621bfe40c3b4c9cdc9dd87c5ba1f8802bdb01efe9a2bd33df985893df8e84a23760992fde905a00d540b1ebc130172fa98ea66a64792f2d5ddfbf5cbfee25c05b19b784145815738aaaab7c6a075bb83f8b2633f202ec885582dd707ffea664b976fdd28eed42ff6d&ascene=1&uin=NTk5OTc0NzIw&devicetype=Windows+10&version=62080079&lang=zh_CN&exportkey=AczaRPHKKPDUXHYuTx19sUU%3D&pass_ticket=LqaPdpAlxUCTvfSV4HCZR0c1rls0cwugJ8baUsYJbO%2Bk3wt%2Boq7TzVjTttT3HA8g&wx_header=0)
 

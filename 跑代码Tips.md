@@ -99,3 +99,44 @@ sudo passwd root
 
 软连接硬链接http://c.biancheng.net/view/740.html
 
+
+
+## HuggingFace使用
+
+HuggingFace 使用清华源
+
+注意：`transformers > 3.1.0` 的版本支持下面的 `mirror` 选项。
+
+只需在 `from_pretrained` 函数调用中添加 `mirror` 选项，如：
+
+```
+AutoModel.from_pretrained('bert-base-uncased', mirror='tuna')
+```
+
+目前内置的两个来源为 `tuna` 与 `bfsu`。此外，也可以显式提供镜像地址，如：
+
+```
+AutoModel.from_pretrained('bert-base-uncased', mirror='https://mirrors.tuna.tsinghua.edu.cn/hugging-face-models')
+```
+
+??? pip install pytorch_pretrained_bert
+
+
+
+不更新预训练模型，固定参数:
+
+```python
+def __init__(self, freeze_bert=False, ...):
+    super(MyModel, self).__init__()
+    self.bert = AutoModel.from_pretrained(model_name, output_hidden_states=True..)
+	if freeze_bert:
+        for p in self.bert.parameters():
+            p.requires_grad = False  
+```
+
+
+
+
+
+
+

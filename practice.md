@@ -2,3 +2,8 @@
 
 2. [浅谈 PyTorch 中的 tensor 及使用](https://blog.csdn.net/byron123456sfsfsfa/article/details/90609758)
 
+
+3. from transformers import BertForMaskedLM和 AutoModel
+   结果不一样， Auto不是自动判断吗，还是调用MaskedLM会修改在最后
+   修改结构？ 修改结构
+

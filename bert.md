@@ -5,6 +5,8 @@
 
 BPE byte pair encoding ?
 
+pooler?
+
 两个任务：
 1. 预测被遮挡的单词
 2. 预测下一个句子

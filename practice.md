@@ -7,3 +7,21 @@
    结果不一样， Auto不是自动判断吗，还是调用MaskedLM会修改在最后
    修改结构？ 修改结构
 
+4. 保存每次最佳的参数
+
+5. named_children named_parameters names_module
+
+6. 参考2
+冻结部分网络参数
+```python
+model = torchvision.model.resnet18(pretrained=True)
+for param in model.parameters():
+   param.requires_grad = False
+
+#用一个全新的fc层 来替代之前的全连接层
+#因为新构建的fc层的参数默认 requires_grad=True
+model.fc = nn.Linear(512, 100)
+
+#只更新fc参数
+optimizer = optim.SGD(model.fc.parameters(), lr=1e-2, momentum=0.9)
+```

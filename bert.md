@@ -5,8 +5,14 @@
 
 BPE byte pair encoding ?
 
+attention mask tensor 作用 ？
+
+
 两个任务：
 1. 预测被遮挡的单词
 2. 预测下一个句子
+
+
+
 
 

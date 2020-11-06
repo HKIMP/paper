@@ -7,6 +7,7 @@ BPE byte pair encoding ?
 
 attention mask tensor 作用 ？
 
+pooler?
 
 两个任务：
 1. 预测被遮挡的单词

@@ -22,9 +22,6 @@ outputs.hidden_states 为什么返回的是(batch_size, sequence_length, hidden_
 不应该是每一层的输出吗？
 
 
-![图 1](images/d8176a2d7de4958b2b3e1d5708e7d8026116b453485a166470fa593694ca66a2.png)  
-
-
 BERT源码
 
 1. [Bert代码详解（一）](https://blog.csdn.net/cpluss/article/details/88418176)

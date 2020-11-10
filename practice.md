@@ -25,3 +25,6 @@ model.fc = nn.Linear(512, 100)
 #只更新fc参数
 optimizer = optim.SGD(model.fc.parameters(), lr=1e-2, momentum=0.9)
 ```
+
+7. [关于 pytorch inplace operation需要注意的问题（data和detach方法的区别）](https://blog.csdn.net/qq_36653505/article/details/90026373?utm_medium=distribute.pc_relevant.none-task-blog-title-2&spm=1001.2101.3001.4242)
+

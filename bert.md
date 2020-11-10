@@ -28,6 +28,11 @@ The Linear layer weights are trained from the next sentence prediction
 outputs.hidden_states 为什么返回的是(batch_size, sequence_length, hidden_size)
 不应该是每一层的输出吗？
 
+BERT 双向？ GPT单向？ BERT用的是Transformers的encoder，GPT用的是Transformers的decoder
+要了解 ELmo GPT
+
+weight dacay
+
 
 BERT源码
 

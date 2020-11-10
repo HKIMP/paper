@@ -1,5 +1,10 @@
+## Question
+
+为什么word2vec是静态的啊，word2vec不可训练吗?
+
 用来训练 tranformer 模型中的 encoder网络？
 
+BERT输入的原始向量是什么啊？是随机初始化的还是预训练好的啊？
 
 自编码 自回归？
 
@@ -31,7 +36,11 @@ BERT源码
 BERT理解
 1. [一文读懂BERT(原理篇)](https://blog.csdn.net/jiaowoshouzi/article/details/89073944)
 
-2. 
+2. [图解BERT模型：从零开始构建BERT](https://cloud.tencent.com/developer/article/1389555)
+
+3. [请问GPT为什么不能双向？](https://www.zhihu.com/question/322034410)
+
+
 
 
 两个任务：

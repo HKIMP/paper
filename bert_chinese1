@@ -1,0 +1,1637 @@
+{
+ "metadata": {
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.2-final"
+  },
+  "orig_nbformat": 2,
+  "kernelspec": {
+   "name": "python3",
+   "display_name": "Python 3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2,
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "'/home/shixiaohu/b532huangkexin/bert-chinese'"
+      ]
+     },
+     "metadata": {},
+     "execution_count": 2
+    }
+   ],
+   "source": [
+    "import os\n",
+    "os.getcwd()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import torch\n",
+    "from transformers import BertTokenizer\n",
+    "from IPython.display import clear_output"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "1.4.0\n"
+     ]
+    }
+   ],
+   "source": [
+    "PRE_MODEL_PATH = './models/'\n",
+    "tokenizer = BertTokenizer.from_pretrained(PRE_MODEL_PATH)\n",
+    "clear_output()\n",
+    "print(torch.__version__)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "字典大小 21128\n"
+     ]
+    }
+   ],
+   "source": [
+    "vocab = tokenizer.vocab\n",
+    "print('字典大小', len(vocab))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "collections.OrderedDict"
+      ]
+     },
+     "metadata": {},
+     "execution_count": 4
+    }
+   ],
+   "source": [
+    "type(vocab)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "769"
+      ]
+     },
+     "metadata": {},
+     "execution_count": 10
+    }
+   ],
+   "source": [
+    "vocab['交']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "token               index\n-------------------------\n囝                    1725\n##虚                 19051\njerry               13111\n茜                    5752\n模                    3563\n防                    7344\n##砝                 17838\n##lk                10758\n砰                    4786\n##™                  9221\n"
+     ]
+    }
+   ],
+   "source": [
+    "import random\n",
+    "#*****\n",
+    "random_tokens = random.sample(list(vocab), 10)\n",
+    "random_ids = [vocab[t] for t in random_tokens]\n",
+    "\n",
+    "print('{0:20}{1}'.format('token', 'index'))\n",
+    "print('-'*25)\n",
+    "\n",
+    "for t, id in zip(random_tokens, random_ids):\n",
+    "    print('{0:15}{1:10}'.format(t, id))\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "('ㄅ', 647)\n('ㄆ', 648)\n('ㄇ', 649)\n('ㄉ', 650)\n('ㄋ', 651)\n('ㄌ', 652)\n('ㄍ', 653)\n('ㄎ', 654)\n('ㄏ', 655)\n('ㄒ', 656)\n"
+     ]
+    }
+   ],
+   "source": [
+    "indices = list(range(647, 657))\n",
+    "some_pairs = [(t, idx) for t, idx in vocab.items() if idx in indices]\n",
+    "for pair in some_pairs:\n",
+    "    print(pair)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "The history saving thread hit an unexpected error (OperationalError('unable to open database file')).History will not be written to the database.\n"
+     ]
+    }
+   ],
+   "source": [
+    "text = \"[CLS]美[MASK]外卖\"\n",
+    "tokens = tokenizer.tokenize(text)\n",
+    "ids = tokenizer.convert_tokens_to_ids(tokens)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 38,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "['[CLS]', '美', '[MASK]', '外', '卖']\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(tokens)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 39,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "[101, 5401, 103, 1912, 1297]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(ids)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 40,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "101"
+      ]
+     },
+     "metadata": {},
+     "execution_count": 40
+    }
+   ],
+   "source": [
+    "vocab['[CLS]']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 41,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stderr",
+     "text": [
+      "Some weights of the model checkpoint at ./models/ were not used when initializing BertForMaskedLM: ['cls.seq_relationship.weight', 'cls.seq_relationship.bias']\n- This IS expected if you are initializing BertForMaskedLM from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPretraining model).\n- This IS NOT expected if you are initializing BertForMaskedLM from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).\n"
+     ]
+    }
+   ],
+   "source": [
+    "from transformers import BertForMaskedLM\n",
+    "\n",
+    "tokens_tensor = torch.tensor([ids])\n",
+    "segments_tensors = torch.zeros_like(tokens_tensor)\n",
+    "masked_model = BertForMaskedLM.from_pretrained(PRE_MODEL_PATH)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 42,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "輸入 tokens ： ['[CLS]', '美', '[MASK]', '外', '卖'] ...\n--------------------------------------------------\nTop 1 (88%)：['[CLS]', '美', '团', '外', '卖'] ...\nTop 2 ( 3%)：['[CLS]', '美', '国', '外', '卖'] ...\nTop 3 ( 2%)：['[CLS]', '美', '食', '外', '卖'] ...\n"
+     ]
+    }
+   ],
+   "source": [
+    "masked_model.eval()\n",
+    "with torch.no_grad():\n",
+    "    outputs = masked_model(tokens_tensor, segments_tensors)\n",
+    "    predictions = outputs[0]\n",
+    "\n",
+    "masked_index = 2\n",
+    "k = 3\n",
+    "probs, indices = torch.topk(torch.softmax(predictions[0, masked_index], -1), k)\n",
+    "predicted_tokens = tokenizer.convert_ids_to_tokens(indices.tolist())\n",
+    "print(\"輸入 tokens ：\", tokens[:10], '...')\n",
+    "print('-' * 50)\n",
+    "for i, (t, p) in enumerate(zip(predicted_tokens, probs), 1):\n",
+    "    tokens[masked_index] = t\n",
+    "    print(\"Top {} ({:2}%)：{}\".format(i, int(p.item() * 100), tokens[:10]), '...')"
+   ]
+  },
+  {
+   "source": [
+    "## Chinese Test"
+   ],
+   "cell_type": "markdown",
+   "metadata": {}
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 74,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "['test.csv', 'train.csv']"
+      ]
+     },
+     "metadata": {},
+     "execution_count": 74
+    }
+   ],
+   "source": [
+    "import glob\n",
+    "glob.glob('*.csv')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df_train = pd.read_csv(\"train.csv\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "            id    tid1    tid2                          title1_zh  \\\n",
+       "0            0       0       1      2017养老保险又新增两项，农村老人人人可申领，你领到了吗   \n",
+       "1            3       2       3  \"你不来深圳，早晚你儿子也要来\"，不出10年深圳人均GDP将超香港   \n",
+       "2            1       2       4  \"你不来深圳，早晚你儿子也要来\"，不出10年深圳人均GDP将超香港   \n",
+       "3            2       2       5  \"你不来深圳，早晚你儿子也要来\"，不出10年深圳人均GDP将超香港   \n",
+       "4            9       6       7               \"用大蒜鉴别地沟油的方法,怎么鉴别地沟油   \n",
+       "...        ...     ...     ...                                ...   \n",
+       "320547  321185  167562  114783    萨拉赫人气爆棚!埃及总统大选未参选获百万选票 现任总统压力山大   \n",
+       "320548  321182  167562  114782    萨拉赫人气爆棚!埃及总统大选未参选获百万选票 现任总统压力山大   \n",
+       "320549  321184  167562  137705    萨拉赫人气爆棚!埃及总统大选未参选获百万选票 现任总统压力山大   \n",
+       "320550  321186  167562   48989    萨拉赫人气爆棚!埃及总统大选未参选获百万选票 现任总统压力山大   \n",
+       "320551  321188  167563   66480      萨达姆此项计划没有此国破坏的话，美国还会对伊拉克发动战争吗   \n",
+       "\n",
+       "                         title2_zh  \\\n",
+       "0         警方辟谣“鸟巢大会每人领5万” 仍有老人坚持进京   \n",
+       "1        深圳GDP首超香港？深圳统计局辟谣：只是差距在缩小   \n",
+       "2             GDP首超香港？深圳澄清：还差一点点……   \n",
+       "3       去年深圳GDP首超香港？深圳统计局辟谣：还差611亿   \n",
+       "4          吃了30年食用油才知道，一片大蒜轻松鉴别地沟油   \n",
+       "...                            ...   \n",
+       "320547     西媒曝萨拉赫被推荐至巴萨 经纪人辟谣：并未发生   \n",
+       "320548            萨拉赫经纪人辟谣：与巴萨传闻不实   \n",
+       "320549   萨拉赫辟谣传闻：埃及非常团结，我们之间没有任何分歧   \n",
+       "320550     辟谣不实传闻，埃及足协主席：萨拉赫不会提前离队   \n",
+       "320551        萨达姆女儿辟谣：萨达姆政权二号人物没死！   \n",
+       "\n",
+       "                                                title1_en  \\\n",
+       "0       There are two new old-age insurance benefits f...   \n",
+       "1       \"If you do not come to Shenzhen, sooner or lat...   \n",
+       "2       \"If you do not come to Shenzhen, sooner or lat...   \n",
+       "3       \"If you do not come to Shenzhen, sooner or lat...   \n",
+       "4       \"How to discriminate oil from gutter oil by me...   \n",
+       "...                                                   ...   \n",
+       "320547  egypt 's presidential election failed to win m...   \n",
+       "320548  egypt 's presidential election failed to win m...   \n",
+       "320549  egypt 's presidential election failed to win m...   \n",
+       "320550  egypt 's presidential election failed to win m...   \n",
+       "320551  Will the United States wage war on Iraq withou...   \n",
+       "\n",
+       "                                                title2_en      label  \n",
+       "0       Police disprove \"bird's nest congress each per...  unrelated  \n",
+       "1       Shenzhen's GDP outstrips Hong Kong? Shenzhen S...  unrelated  \n",
+       "2       The GDP overtopped Hong Kong? Shenzhen clarifi...  unrelated  \n",
+       "3       Shenzhen's GDP topped Hong Kong last year? She...  unrelated  \n",
+       "4       It took 30 years of cooking oil to know that o...     agreed  \n",
+       "...                                                   ...        ...  \n",
+       "320547  West Media Exposing Tallahlach has been recomm...  unrelated  \n",
+       "320548  Salah agent's dishonest rumour: rumour with ba...  unrelated  \n",
+       "320549  Rumor has it that Egypt is very united and the...  unrelated  \n",
+       "320550  False rumors, Egypt Football Association Chair...  unrelated  \n",
+       "320551  Saddam's daughter refutes rumors: no. 2 of Sad...  unrelated  \n",
+       "\n",
+       "[320552 rows x 8 columns]"
+      ],
+      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>id</th>\n      <th>tid1</th>\n      <th>tid2</th>\n      <th>title1_zh</th>\n      <th>title2_zh</th>\n      <th>title1_en</th>\n      <th>title2_en</th>\n      <th>label</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n      <td>2017养老保险又新增两项，农村老人人人可申领，你领到了吗</td>\n      <td>警方辟谣“鸟巢大会每人领5万” 仍有老人坚持进京</td>\n      <td>There are two new old-age insurance benefits f...</td>\n      <td>Police disprove \"bird's nest congress each per...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>3</td>\n      <td>2</td>\n      <td>3</td>\n      <td>\"你不来深圳，早晚你儿子也要来\"，不出10年深圳人均GDP将超香港</td>\n      <td>深圳GDP首超香港？深圳统计局辟谣：只是差距在缩小</td>\n      <td>\"If you do not come to Shenzhen, sooner or lat...</td>\n      <td>Shenzhen's GDP outstrips Hong Kong? Shenzhen S...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>1</td>\n      <td>2</td>\n      <td>4</td>\n      <td>\"你不来深圳，早晚你儿子也要来\"，不出10年深圳人均GDP将超香港</td>\n      <td>GDP首超香港？深圳澄清：还差一点点……</td>\n      <td>\"If you do not come to Shenzhen, sooner or lat...</td>\n      <td>The GDP overtopped Hong Kong? Shenzhen clarifi...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>2</td>\n      <td>2</td>\n      <td>5</td>\n      <td>\"你不来深圳，早晚你儿子也要来\"，不出10年深圳人均GDP将超香港</td>\n      <td>去年深圳GDP首超香港？深圳统计局辟谣：还差611亿</td>\n      <td>\"If you do not come to Shenzhen, sooner or lat...</td>\n      <td>Shenzhen's GDP topped Hong Kong last year? She...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>9</td>\n      <td>6</td>\n      <td>7</td>\n      <td>\"用大蒜鉴别地沟油的方法,怎么鉴别地沟油</td>\n      <td>吃了30年食用油才知道，一片大蒜轻松鉴别地沟油</td>\n      <td>\"How to discriminate oil from gutter oil by me...</td>\n      <td>It took 30 years of cooking oil to know that o...</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>...</th>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n    </tr>\n    <tr>\n      <th>320547</th>\n      <td>321185</td>\n      <td>167562</td>\n      <td>114783</td>\n      <td>萨拉赫人气爆棚!埃及总统大选未参选获百万选票 现任总统压力山大</td>\n      <td>西媒曝萨拉赫被推荐至巴萨 经纪人辟谣：并未发生</td>\n      <td>egypt 's presidential election failed to win m...</td>\n      <td>West Media Exposing Tallahlach has been recomm...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>320548</th>\n      <td>321182</td>\n      <td>167562</td>\n      <td>114782</td>\n      <td>萨拉赫人气爆棚!埃及总统大选未参选获百万选票 现任总统压力山大</td>\n      <td>萨拉赫经纪人辟谣：与巴萨传闻不实</td>\n      <td>egypt 's presidential election failed to win m...</td>\n      <td>Salah agent's dishonest rumour: rumour with ba...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>320549</th>\n      <td>321184</td>\n      <td>167562</td>\n      <td>137705</td>\n      <td>萨拉赫人气爆棚!埃及总统大选未参选获百万选票 现任总统压力山大</td>\n      <td>萨拉赫辟谣传闻：埃及非常团结，我们之间没有任何分歧</td>\n      <td>egypt 's presidential election failed to win m...</td>\n      <td>Rumor has it that Egypt is very united and the...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>320550</th>\n      <td>321186</td>\n      <td>167562</td>\n      <td>48989</td>\n      <td>萨拉赫人气爆棚!埃及总统大选未参选获百万选票 现任总统压力山大</td>\n      <td>辟谣不实传闻，埃及足协主席：萨拉赫不会提前离队</td>\n      <td>egypt 's presidential election failed to win m...</td>\n      <td>False rumors, Egypt Football Association Chair...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>320551</th>\n      <td>321188</td>\n      <td>167563</td>\n      <td>66480</td>\n      <td>萨达姆此项计划没有此国破坏的话，美国还会对伊拉克发动战争吗</td>\n      <td>萨达姆女儿辟谣：萨达姆政权二号人物没死！</td>\n      <td>Will the United States wage war on Iraq withou...</td>\n      <td>Saddam's daughter refutes rumors: no. 2 of Sad...</td>\n      <td>unrelated</td>\n    </tr>\n  </tbody>\n</table>\n<p>320552 rows × 8 columns</p>\n</div>"
+     },
+     "metadata": {},
+     "execution_count": 27
+    }
+   ],
+   "source": [
+    "df_train"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "empty_title = ((df_train['title1_zh'].isnull()) | (df_train['title2_zh'].isnull()) | (df_train['title2_zh'] == '') | (df_train['title2_zh'] == '0'))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "0         False\n",
+       "1         False\n",
+       "2         False\n",
+       "3         False\n",
+       "4         False\n",
+       "          ...  \n",
+       "320547    False\n",
+       "320548    False\n",
+       "320549    False\n",
+       "320550    False\n",
+       "320551    False\n",
+       "Length: 320552, dtype: bool"
+      ]
+     },
+     "metadata": {},
+     "execution_count": 29
+    }
+   ],
+   "source": [
+    "empty_title"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df_train = df_train[~empty_title]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "            id    tid1    tid2                          title1_zh  \\\n",
+       "0            0       0       1      2017养老保险又新增两项，农村老人人人可申领，你领到了吗   \n",
+       "1            3       2       3  \"你不来深圳，早晚你儿子也要来\"，不出10年深圳人均GDP将超香港   \n",
+       "2            1       2       4  \"你不来深圳，早晚你儿子也要来\"，不出10年深圳人均GDP将超香港   \n",
+       "3            2       2       5  \"你不来深圳，早晚你儿子也要来\"，不出10年深圳人均GDP将超香港   \n",
+       "4            9       6       7               \"用大蒜鉴别地沟油的方法,怎么鉴别地沟油   \n",
+       "...        ...     ...     ...                                ...   \n",
+       "320547  321185  167562  114783    萨拉赫人气爆棚!埃及总统大选未参选获百万选票 现任总统压力山大   \n",
+       "320548  321182  167562  114782    萨拉赫人气爆棚!埃及总统大选未参选获百万选票 现任总统压力山大   \n",
+       "320549  321184  167562  137705    萨拉赫人气爆棚!埃及总统大选未参选获百万选票 现任总统压力山大   \n",
+       "320550  321186  167562   48989    萨拉赫人气爆棚!埃及总统大选未参选获百万选票 现任总统压力山大   \n",
+       "320551  321188  167563   66480      萨达姆此项计划没有此国破坏的话，美国还会对伊拉克发动战争吗   \n",
+       "\n",
+       "                         title2_zh  \\\n",
+       "0         警方辟谣“鸟巢大会每人领5万” 仍有老人坚持进京   \n",
+       "1        深圳GDP首超香港？深圳统计局辟谣：只是差距在缩小   \n",
+       "2             GDP首超香港？深圳澄清：还差一点点……   \n",
+       "3       去年深圳GDP首超香港？深圳统计局辟谣：还差611亿   \n",
+       "4          吃了30年食用油才知道，一片大蒜轻松鉴别地沟油   \n",
+       "...                            ...   \n",
+       "320547     西媒曝萨拉赫被推荐至巴萨 经纪人辟谣：并未发生   \n",
+       "320548            萨拉赫经纪人辟谣：与巴萨传闻不实   \n",
+       "320549   萨拉赫辟谣传闻：埃及非常团结，我们之间没有任何分歧   \n",
+       "320550     辟谣不实传闻，埃及足协主席：萨拉赫不会提前离队   \n",
+       "320551        萨达姆女儿辟谣：萨达姆政权二号人物没死！   \n",
+       "\n",
+       "                                                title1_en  \\\n",
+       "0       There are two new old-age insurance benefits f...   \n",
+       "1       \"If you do not come to Shenzhen, sooner or lat...   \n",
+       "2       \"If you do not come to Shenzhen, sooner or lat...   \n",
+       "3       \"If you do not come to Shenzhen, sooner or lat...   \n",
+       "4       \"How to discriminate oil from gutter oil by me...   \n",
+       "...                                                   ...   \n",
+       "320547  egypt 's presidential election failed to win m...   \n",
+       "320548  egypt 's presidential election failed to win m...   \n",
+       "320549  egypt 's presidential election failed to win m...   \n",
+       "320550  egypt 's presidential election failed to win m...   \n",
+       "320551  Will the United States wage war on Iraq withou...   \n",
+       "\n",
+       "                                                title2_en      label  \n",
+       "0       Police disprove \"bird's nest congress each per...  unrelated  \n",
+       "1       Shenzhen's GDP outstrips Hong Kong? Shenzhen S...  unrelated  \n",
+       "2       The GDP overtopped Hong Kong? Shenzhen clarifi...  unrelated  \n",
+       "3       Shenzhen's GDP topped Hong Kong last year? She...  unrelated  \n",
+       "4       It took 30 years of cooking oil to know that o...     agreed  \n",
+       "...                                                   ...        ...  \n",
+       "320547  West Media Exposing Tallahlach has been recomm...  unrelated  \n",
+       "320548  Salah agent's dishonest rumour: rumour with ba...  unrelated  \n",
+       "320549  Rumor has it that Egypt is very united and the...  unrelated  \n",
+       "320550  False rumors, Egypt Football Association Chair...  unrelated  \n",
+       "320551  Saddam's daughter refutes rumors: no. 2 of Sad...  unrelated  \n",
+       "\n",
+       "[320543 rows x 8 columns]"
+      ],
+      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>id</th>\n      <th>tid1</th>\n      <th>tid2</th>\n      <th>title1_zh</th>\n      <th>title2_zh</th>\n      <th>title1_en</th>\n      <th>title2_en</th>\n      <th>label</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n      <td>2017养老保险又新增两项，农村老人人人可申领，你领到了吗</td>\n      <td>警方辟谣“鸟巢大会每人领5万” 仍有老人坚持进京</td>\n      <td>There are two new old-age insurance benefits f...</td>\n      <td>Police disprove \"bird's nest congress each per...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>3</td>\n      <td>2</td>\n      <td>3</td>\n      <td>\"你不来深圳，早晚你儿子也要来\"，不出10年深圳人均GDP将超香港</td>\n      <td>深圳GDP首超香港？深圳统计局辟谣：只是差距在缩小</td>\n      <td>\"If you do not come to Shenzhen, sooner or lat...</td>\n      <td>Shenzhen's GDP outstrips Hong Kong? Shenzhen S...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>1</td>\n      <td>2</td>\n      <td>4</td>\n      <td>\"你不来深圳，早晚你儿子也要来\"，不出10年深圳人均GDP将超香港</td>\n      <td>GDP首超香港？深圳澄清：还差一点点……</td>\n      <td>\"If you do not come to Shenzhen, sooner or lat...</td>\n      <td>The GDP overtopped Hong Kong? Shenzhen clarifi...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>2</td>\n      <td>2</td>\n      <td>5</td>\n      <td>\"你不来深圳，早晚你儿子也要来\"，不出10年深圳人均GDP将超香港</td>\n      <td>去年深圳GDP首超香港？深圳统计局辟谣：还差611亿</td>\n      <td>\"If you do not come to Shenzhen, sooner or lat...</td>\n      <td>Shenzhen's GDP topped Hong Kong last year? She...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>9</td>\n      <td>6</td>\n      <td>7</td>\n      <td>\"用大蒜鉴别地沟油的方法,怎么鉴别地沟油</td>\n      <td>吃了30年食用油才知道，一片大蒜轻松鉴别地沟油</td>\n      <td>\"How to discriminate oil from gutter oil by me...</td>\n      <td>It took 30 years of cooking oil to know that o...</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>...</th>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n    </tr>\n    <tr>\n      <th>320547</th>\n      <td>321185</td>\n      <td>167562</td>\n      <td>114783</td>\n      <td>萨拉赫人气爆棚!埃及总统大选未参选获百万选票 现任总统压力山大</td>\n      <td>西媒曝萨拉赫被推荐至巴萨 经纪人辟谣：并未发生</td>\n      <td>egypt 's presidential election failed to win m...</td>\n      <td>West Media Exposing Tallahlach has been recomm...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>320548</th>\n      <td>321182</td>\n      <td>167562</td>\n      <td>114782</td>\n      <td>萨拉赫人气爆棚!埃及总统大选未参选获百万选票 现任总统压力山大</td>\n      <td>萨拉赫经纪人辟谣：与巴萨传闻不实</td>\n      <td>egypt 's presidential election failed to win m...</td>\n      <td>Salah agent's dishonest rumour: rumour with ba...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>320549</th>\n      <td>321184</td>\n      <td>167562</td>\n      <td>137705</td>\n      <td>萨拉赫人气爆棚!埃及总统大选未参选获百万选票 现任总统压力山大</td>\n      <td>萨拉赫辟谣传闻：埃及非常团结，我们之间没有任何分歧</td>\n      <td>egypt 's presidential election failed to win m...</td>\n      <td>Rumor has it that Egypt is very united and the...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>320550</th>\n      <td>321186</td>\n      <td>167562</td>\n      <td>48989</td>\n      <td>萨拉赫人气爆棚!埃及总统大选未参选获百万选票 现任总统压力山大</td>\n      <td>辟谣不实传闻，埃及足协主席：萨拉赫不会提前离队</td>\n      <td>egypt 's presidential election failed to win m...</td>\n      <td>False rumors, Egypt Football Association Chair...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>320551</th>\n      <td>321188</td>\n      <td>167563</td>\n      <td>66480</td>\n      <td>萨达姆此项计划没有此国破坏的话，美国还会对伊拉克发动战争吗</td>\n      <td>萨达姆女儿辟谣：萨达姆政权二号人物没死！</td>\n      <td>Will the United States wage war on Iraq withou...</td>\n      <td>Saddam's daughter refutes rumors: no. 2 of Sad...</td>\n      <td>unrelated</td>\n    </tr>\n  </tbody>\n</table>\n<p>320543 rows × 8 columns</p>\n</div>"
+     },
+     "metadata": {},
+     "execution_count": 31
+    }
+   ],
+   "source": [
+    "df_train"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 32,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "0         30\n",
+       "1         33\n",
+       "2         33\n",
+       "3         33\n",
+       "4         20\n",
+       "          ..\n",
+       "320547    31\n",
+       "320548    31\n",
+       "320549    31\n",
+       "320550    31\n",
+       "320551    29\n",
+       "Name: title1_zh, Length: 320543, dtype: int64"
+      ]
+     },
+     "metadata": {},
+     "execution_count": 32
+    }
+   ],
+   "source": [
+    "df_train.title1_zh.apply(lambda x : len(x))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 33,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "max_length = 30\n",
+    "df_train = df_train[~(df_train.title1_zh.apply(lambda x : len(x)) > max_length)]\n",
+    "df_train = df_train[~(df_train.title2_zh.apply(lambda x : len(x)) > max_length)]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 84,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "            id    tid1    tid2                       title1_zh  \\\n",
+       "0            0       0       1   2017养老保险又新增两项，农村老人人人可申领，你领到了吗   \n",
+       "4            9       6       7            \"用大蒜鉴别地沟油的方法,怎么鉴别地沟油   \n",
+       "6            6       9      10                  \"吃榴莲的禁忌,吃错会致命!   \n",
+       "9            8       6      14            \"用大蒜鉴别地沟油的方法,怎么鉴别地沟油   \n",
+       "10          11       6      15            \"用大蒜鉴别地沟油的方法,怎么鉴别地沟油   \n",
+       "...        ...     ...     ...                             ...   \n",
+       "320534  321168  167559    1192              萧山外卖小哥逆行撞车被耳机线割喉致死   \n",
+       "320535  321171  167561  114919                      萧山惊现“人造鸡翅”   \n",
+       "320536  321170  167561  114915                      萧山惊现“人造鸡翅”   \n",
+       "320537  321172  167561  167555                      萧山惊现“人造鸡翅”   \n",
+       "320551  321188  167563   66480   萨达姆此项计划没有此国破坏的话，美国还会对伊拉克发动战争吗   \n",
+       "\n",
+       "                             title2_zh  \\\n",
+       "0             警方辟谣“鸟巢大会每人领5万” 仍有老人坚持进京   \n",
+       "4              吃了30年食用油才知道，一片大蒜轻松鉴别地沟油   \n",
+       "6              榴莲不能和什么一起吃 与咖啡同吃诱发心脏病\"\"   \n",
+       "9       一颗大蒜就能鉴别地沟油？别闹了！做到下面几点，让您远离地沟油   \n",
+       "10                   用一颗大蒜鉴别地沟油,非常实用!\"   \n",
+       "...                                ...   \n",
+       "320534      辟谣！朋友圈传播的连环撞车事故不是发生在利津黄河大桥   \n",
+       "320535         萧山出现惊人假鸡翅!人造鸡翅!有图有真相!!!   \n",
+       "320536                       市面上存在人造鸡翅   \n",
+       "320537                    萧山惊现人造鸡翅 伤不起   \n",
+       "320551            萨达姆女儿辟谣：萨达姆政权二号人物没死！   \n",
+       "\n",
+       "                                                title1_en  \\\n",
+       "0       There are two new old-age insurance benefits f...   \n",
+       "4       \"How to discriminate oil from gutter oil by me...   \n",
+       "6       \"if you eat durian, you will kill yourself if ...   \n",
+       "9       \"How to discriminate oil from gutter oil by me...   \n",
+       "10      \"How to discriminate oil from gutter oil by me...   \n",
+       "...                                                   ...   \n",
+       "320534  Delivery guy in Xiaoshan, a retrograde smash-u...   \n",
+       "320535           \"Artificial chicken wings\" in Xiao Shan.   \n",
+       "320536           \"Artificial chicken wings\" in Xiao Shan.   \n",
+       "320537           \"Artificial chicken wings\" in Xiao Shan.   \n",
+       "320551  Will the United States wage war on Iraq withou...   \n",
+       "\n",
+       "                                                title2_en      label  \n",
+       "0       Police disprove \"bird's nest congress each per...  unrelated  \n",
+       "4       It took 30 years of cooking oil to know that o...     agreed  \n",
+       "6       Durian can't eat with anything, it's the same ...  unrelated  \n",
+       "9       A single piece of garlic can spot gutter oil? ...     agreed  \n",
+       "10      It's very practical to use a single piece of g...     agreed  \n",
+       "...                                                   ...        ...  \n",
+       "320534  False rumors! The chain of crashes spread by f...  unrelated  \n",
+       "320535  the amazing fake chicken wings appear in xiaos...     agreed  \n",
+       "320536          There are artificial wings on the market.  unrelated  \n",
+       "320537  xiao shan is shocked by the fact that artifici...     agreed  \n",
+       "320551  Saddam's daughter refutes rumors: no. 2 of Sad...  unrelated  \n",
+       "\n",
+       "[265693 rows x 8 columns]"
+      ],
+      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>id</th>\n      <th>tid1</th>\n      <th>tid2</th>\n      <th>title1_zh</th>\n      <th>title2_zh</th>\n      <th>title1_en</th>\n      <th>title2_en</th>\n      <th>label</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>0</td>\n      <td>0</td>\n      <td>1</td>\n      <td>2017养老保险又新增两项，农村老人人人可申领，你领到了吗</td>\n      <td>警方辟谣“鸟巢大会每人领5万” 仍有老人坚持进京</td>\n      <td>There are two new old-age insurance benefits f...</td>\n      <td>Police disprove \"bird's nest congress each per...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>9</td>\n      <td>6</td>\n      <td>7</td>\n      <td>\"用大蒜鉴别地沟油的方法,怎么鉴别地沟油</td>\n      <td>吃了30年食用油才知道，一片大蒜轻松鉴别地沟油</td>\n      <td>\"How to discriminate oil from gutter oil by me...</td>\n      <td>It took 30 years of cooking oil to know that o...</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>6</th>\n      <td>6</td>\n      <td>9</td>\n      <td>10</td>\n      <td>\"吃榴莲的禁忌,吃错会致命!</td>\n      <td>榴莲不能和什么一起吃 与咖啡同吃诱发心脏病\"\"</td>\n      <td>\"if you eat durian, you will kill yourself if ...</td>\n      <td>Durian can't eat with anything, it's the same ...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>9</th>\n      <td>8</td>\n      <td>6</td>\n      <td>14</td>\n      <td>\"用大蒜鉴别地沟油的方法,怎么鉴别地沟油</td>\n      <td>一颗大蒜就能鉴别地沟油？别闹了！做到下面几点，让您远离地沟油</td>\n      <td>\"How to discriminate oil from gutter oil by me...</td>\n      <td>A single piece of garlic can spot gutter oil? ...</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>10</th>\n      <td>11</td>\n      <td>6</td>\n      <td>15</td>\n      <td>\"用大蒜鉴别地沟油的方法,怎么鉴别地沟油</td>\n      <td>用一颗大蒜鉴别地沟油,非常实用!\"</td>\n      <td>\"How to discriminate oil from gutter oil by me...</td>\n      <td>It's very practical to use a single piece of g...</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>...</th>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n    </tr>\n    <tr>\n      <th>320534</th>\n      <td>321168</td>\n      <td>167559</td>\n      <td>1192</td>\n      <td>萧山外卖小哥逆行撞车被耳机线割喉致死</td>\n      <td>辟谣！朋友圈传播的连环撞车事故不是发生在利津黄河大桥</td>\n      <td>Delivery guy in Xiaoshan, a retrograde smash-u...</td>\n      <td>False rumors! The chain of crashes spread by f...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>320535</th>\n      <td>321171</td>\n      <td>167561</td>\n      <td>114919</td>\n      <td>萧山惊现“人造鸡翅”</td>\n      <td>萧山出现惊人假鸡翅!人造鸡翅!有图有真相!!!</td>\n      <td>\"Artificial chicken wings\" in Xiao Shan.</td>\n      <td>the amazing fake chicken wings appear in xiaos...</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>320536</th>\n      <td>321170</td>\n      <td>167561</td>\n      <td>114915</td>\n      <td>萧山惊现“人造鸡翅”</td>\n      <td>市面上存在人造鸡翅</td>\n      <td>\"Artificial chicken wings\" in Xiao Shan.</td>\n      <td>There are artificial wings on the market.</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>320537</th>\n      <td>321172</td>\n      <td>167561</td>\n      <td>167555</td>\n      <td>萧山惊现“人造鸡翅”</td>\n      <td>萧山惊现人造鸡翅 伤不起</td>\n      <td>\"Artificial chicken wings\" in Xiao Shan.</td>\n      <td>xiao shan is shocked by the fact that artifici...</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>320551</th>\n      <td>321188</td>\n      <td>167563</td>\n      <td>66480</td>\n      <td>萨达姆此项计划没有此国破坏的话，美国还会对伊拉克发动战争吗</td>\n      <td>萨达姆女儿辟谣：萨达姆政权二号人物没死！</td>\n      <td>Will the United States wage war on Iraq withou...</td>\n      <td>Saddam's daughter refutes rumors: no. 2 of Sad...</td>\n      <td>unrelated</td>\n    </tr>\n  </tbody>\n</table>\n<p>265693 rows × 8 columns</p>\n</div>"
+     },
+     "metadata": {},
+     "execution_count": 84
+    }
+   ],
+   "source": [
+    "df_train"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 34,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "            id    tid1    tid2                      title1_zh  \\\n",
+       "315439  316073  165966  165969       苏有朋要结婚了，但网友觉得他还是和林心如比较合适   \n",
+       "254508  255080  147474  136497  爆料李小璐要成前妻了贾乃亮模仿王宝强一步到位、快刀斩乱麻！   \n",
+       "59810    59964   51716   51724  为彩礼，母亲把女儿嫁给陌生男子，十年后再见面，母亲湿了眼眶   \n",
+       "258278  258856  148597   36079         猪油是个宝，一勺猪油等于十副药，先备起来再说   \n",
+       "103502  103784   79487   70738                  剖析：香椿，为什么会致癌？   \n",
+       "...        ...     ...     ...                            ...   \n",
+       "198584  198996  127147  107502    据说江苏最应该合并的两个城市，打造特大城市即将超越苏州   \n",
+       "120512  120832   29793   29771    听说《情深深雨蒙蒙》要准备翻拍？王凯、赵丽颖都将出演？   \n",
+       "201484  201886  128323     958    支付宝重磅功能蚂蚁借呗被关闭，网友：借的钱不用还了吗？   \n",
+       "237475  238002  141508  141505   毛宁入狱，杨钰莹哭到断肠为他唱这首歌，毛宁在狱中抱头痛哭   \n",
+       "119721  120033   89233   55602            吉利已经接洽北汽集团 洽谈收购股权事宜   \n",
+       "\n",
+       "                             title2_zh  \\\n",
+       "315439  好闺蜜结婚给不婚族的秦岚扔花球，倒霉的秦岚掉水里笑哭苏有朋！   \n",
+       "254508  李小璐要变前妻了？贾乃亮可能效仿王宝强当机立断，快刀斩乱麻！   \n",
+       "59810   阿姨，不要彩礼是觉得你家穷，给你台阶下，不要以为我嫁不出去！   \n",
+       "258278  传承千百的猪油为何变得人人唯恐避之不及？揭开猪油的四大谣言！   \n",
+       "103502            香椿含亚硝酸盐多吃会致癌？测完发现是谣言   \n",
+       "...                                ...   \n",
+       "198584   镇江家长注意啦，镇江朋友圈流传100多人偷孩子挖器官系谣言   \n",
+       "120512    《情深深雨蒙蒙》即将被翻拍 赵丽颖饰演依萍能否战胜赵薇？   \n",
+       "201484            央行澄清：并未书面通知要求删除无现金字眼   \n",
+       "237475           毛宁，入狱后杨钰莹含泪唱出这首歌，唱哭毛宁   \n",
+       "119721       戴姆勒辟谣入股沃尔沃/特斯拉将在中国设“超级工厂”   \n",
+       "\n",
+       "                                                title1_en  \\\n",
+       "315439  Su Youpeng is getting married, but netizens fe...   \n",
+       "254508  Li Xiaolu wants to become ex-wife Jia Lianglia...   \n",
+       "59810   For the dowry, the mother married the daughter...   \n",
+       "258278  lard is a treasure. A spoonful of lard is ten ...   \n",
+       "103502                 Analysis: Toona, why cause cancer?   \n",
+       "...                                                   ...   \n",
+       "198584  It is said that jiangsu should merge the two c...   \n",
+       "120512  I heard that \"deep rain\" is preparing for a re...   \n",
+       "201484  Pay treasure big function ant borrow it is clo...   \n",
+       "237475  While Miriam was in prison, Yang Yu-ying cried...   \n",
+       "119721  Geely has approached the North Automotive Grou...   \n",
+       "\n",
+       "                                                title2_en      label  \n",
+       "315439  A good girl married to non-married qin lang th...  unrelated  \n",
+       "254508  Li Xiaolu wants to change his ex-wife? Jia Lia...     agreed  \n",
+       "59810   Aunty, do not want a dowry to feel that your f...  unrelated  \n",
+       "258278  To pass on thousands of lard, why has everyone...  unrelated  \n",
+       "103502   Toona contains nitrite too much to cause cancer?  disagreed  \n",
+       "...                                                   ...        ...  \n",
+       "198584  Zhenjiang parents pay attention, Zhenjiang fri...  unrelated  \n",
+       "120512  \"Deep rain\" is about to be remade by Zhao Liyi...     agreed  \n",
+       "201484  Central Bank clarifies no written notice requi...  unrelated  \n",
+       "237475  After the imprisonment, Yang Yu-ying sang the ...     agreed  \n",
+       "119721  Daimler talks about investing in volvo / tesla...  unrelated  \n",
+       "\n",
+       "[79708 rows x 8 columns]"
+      ],
+      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>id</th>\n      <th>tid1</th>\n      <th>tid2</th>\n      <th>title1_zh</th>\n      <th>title2_zh</th>\n      <th>title1_en</th>\n      <th>title2_en</th>\n      <th>label</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>315439</th>\n      <td>316073</td>\n      <td>165966</td>\n      <td>165969</td>\n      <td>苏有朋要结婚了，但网友觉得他还是和林心如比较合适</td>\n      <td>好闺蜜结婚给不婚族的秦岚扔花球，倒霉的秦岚掉水里笑哭苏有朋！</td>\n      <td>Su Youpeng is getting married, but netizens fe...</td>\n      <td>A good girl married to non-married qin lang th...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>254508</th>\n      <td>255080</td>\n      <td>147474</td>\n      <td>136497</td>\n      <td>爆料李小璐要成前妻了贾乃亮模仿王宝强一步到位、快刀斩乱麻！</td>\n      <td>李小璐要变前妻了？贾乃亮可能效仿王宝强当机立断，快刀斩乱麻！</td>\n      <td>Li Xiaolu wants to become ex-wife Jia Lianglia...</td>\n      <td>Li Xiaolu wants to change his ex-wife? Jia Lia...</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>59810</th>\n      <td>59964</td>\n      <td>51716</td>\n      <td>51724</td>\n      <td>为彩礼，母亲把女儿嫁给陌生男子，十年后再见面，母亲湿了眼眶</td>\n      <td>阿姨，不要彩礼是觉得你家穷，给你台阶下，不要以为我嫁不出去！</td>\n      <td>For the dowry, the mother married the daughter...</td>\n      <td>Aunty, do not want a dowry to feel that your f...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>258278</th>\n      <td>258856</td>\n      <td>148597</td>\n      <td>36079</td>\n      <td>猪油是个宝，一勺猪油等于十副药，先备起来再说</td>\n      <td>传承千百的猪油为何变得人人唯恐避之不及？揭开猪油的四大谣言！</td>\n      <td>lard is a treasure. A spoonful of lard is ten ...</td>\n      <td>To pass on thousands of lard, why has everyone...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>103502</th>\n      <td>103784</td>\n      <td>79487</td>\n      <td>70738</td>\n      <td>剖析：香椿，为什么会致癌？</td>\n      <td>香椿含亚硝酸盐多吃会致癌？测完发现是谣言</td>\n      <td>Analysis: Toona, why cause cancer?</td>\n      <td>Toona contains nitrite too much to cause cancer?</td>\n      <td>disagreed</td>\n    </tr>\n    <tr>\n      <th>...</th>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n    </tr>\n    <tr>\n      <th>198584</th>\n      <td>198996</td>\n      <td>127147</td>\n      <td>107502</td>\n      <td>据说江苏最应该合并的两个城市，打造特大城市即将超越苏州</td>\n      <td>镇江家长注意啦，镇江朋友圈流传100多人偷孩子挖器官系谣言</td>\n      <td>It is said that jiangsu should merge the two c...</td>\n      <td>Zhenjiang parents pay attention, Zhenjiang fri...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>120512</th>\n      <td>120832</td>\n      <td>29793</td>\n      <td>29771</td>\n      <td>听说《情深深雨蒙蒙》要准备翻拍？王凯、赵丽颖都将出演？</td>\n      <td>《情深深雨蒙蒙》即将被翻拍 赵丽颖饰演依萍能否战胜赵薇？</td>\n      <td>I heard that \"deep rain\" is preparing for a re...</td>\n      <td>\"Deep rain\" is about to be remade by Zhao Liyi...</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>201484</th>\n      <td>201886</td>\n      <td>128323</td>\n      <td>958</td>\n      <td>支付宝重磅功能蚂蚁借呗被关闭，网友：借的钱不用还了吗？</td>\n      <td>央行澄清：并未书面通知要求删除无现金字眼</td>\n      <td>Pay treasure big function ant borrow it is clo...</td>\n      <td>Central Bank clarifies no written notice requi...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>237475</th>\n      <td>238002</td>\n      <td>141508</td>\n      <td>141505</td>\n      <td>毛宁入狱，杨钰莹哭到断肠为他唱这首歌，毛宁在狱中抱头痛哭</td>\n      <td>毛宁，入狱后杨钰莹含泪唱出这首歌，唱哭毛宁</td>\n      <td>While Miriam was in prison, Yang Yu-ying cried...</td>\n      <td>After the imprisonment, Yang Yu-ying sang the ...</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>119721</th>\n      <td>120033</td>\n      <td>89233</td>\n      <td>55602</td>\n      <td>吉利已经接洽北汽集团 洽谈收购股权事宜</td>\n      <td>戴姆勒辟谣入股沃尔沃/特斯拉将在中国设“超级工厂”</td>\n      <td>Geely has approached the North Automotive Grou...</td>\n      <td>Daimler talks about investing in volvo / tesla...</td>\n      <td>unrelated</td>\n    </tr>\n  </tbody>\n</table>\n<p>79708 rows × 8 columns</p>\n</div>"
+     },
+     "metadata": {},
+     "execution_count": 34
+    }
+   ],
+   "source": [
+    "sample_frac = 0.3\n",
+    "df_train_2 = df_train.sample(frac=sample_frac, random_state=9527)\n",
+    "df_train_2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 35,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "        index      id    tid1    tid2                      title1_zh  \\\n",
+       "0      315439  316073  165966  165969       苏有朋要结婚了，但网友觉得他还是和林心如比较合适   \n",
+       "1      254508  255080  147474  136497  爆料李小璐要成前妻了贾乃亮模仿王宝强一步到位、快刀斩乱麻！   \n",
+       "2       59810   59964   51716   51724  为彩礼，母亲把女儿嫁给陌生男子，十年后再见面，母亲湿了眼眶   \n",
+       "3      258278  258856  148597   36079         猪油是个宝，一勺猪油等于十副药，先备起来再说   \n",
+       "4      103502  103784   79487   70738                  剖析：香椿，为什么会致癌？   \n",
+       "...       ...     ...     ...     ...                            ...   \n",
+       "79703  198584  198996  127147  107502    据说江苏最应该合并的两个城市，打造特大城市即将超越苏州   \n",
+       "79704  120512  120832   29793   29771    听说《情深深雨蒙蒙》要准备翻拍？王凯、赵丽颖都将出演？   \n",
+       "79705  201484  201886  128323     958    支付宝重磅功能蚂蚁借呗被关闭，网友：借的钱不用还了吗？   \n",
+       "79706  237475  238002  141508  141505   毛宁入狱，杨钰莹哭到断肠为他唱这首歌，毛宁在狱中抱头痛哭   \n",
+       "79707  119721  120033   89233   55602            吉利已经接洽北汽集团 洽谈收购股权事宜   \n",
+       "\n",
+       "                            title2_zh  \\\n",
+       "0      好闺蜜结婚给不婚族的秦岚扔花球，倒霉的秦岚掉水里笑哭苏有朋！   \n",
+       "1      李小璐要变前妻了？贾乃亮可能效仿王宝强当机立断，快刀斩乱麻！   \n",
+       "2      阿姨，不要彩礼是觉得你家穷，给你台阶下，不要以为我嫁不出去！   \n",
+       "3      传承千百的猪油为何变得人人唯恐避之不及？揭开猪油的四大谣言！   \n",
+       "4                香椿含亚硝酸盐多吃会致癌？测完发现是谣言   \n",
+       "...                               ...   \n",
+       "79703   镇江家长注意啦，镇江朋友圈流传100多人偷孩子挖器官系谣言   \n",
+       "79704    《情深深雨蒙蒙》即将被翻拍 赵丽颖饰演依萍能否战胜赵薇？   \n",
+       "79705            央行澄清：并未书面通知要求删除无现金字眼   \n",
+       "79706           毛宁，入狱后杨钰莹含泪唱出这首歌，唱哭毛宁   \n",
+       "79707       戴姆勒辟谣入股沃尔沃/特斯拉将在中国设“超级工厂”   \n",
+       "\n",
+       "                                               title1_en  \\\n",
+       "0      Su Youpeng is getting married, but netizens fe...   \n",
+       "1      Li Xiaolu wants to become ex-wife Jia Lianglia...   \n",
+       "2      For the dowry, the mother married the daughter...   \n",
+       "3      lard is a treasure. A spoonful of lard is ten ...   \n",
+       "4                     Analysis: Toona, why cause cancer?   \n",
+       "...                                                  ...   \n",
+       "79703  It is said that jiangsu should merge the two c...   \n",
+       "79704  I heard that \"deep rain\" is preparing for a re...   \n",
+       "79705  Pay treasure big function ant borrow it is clo...   \n",
+       "79706  While Miriam was in prison, Yang Yu-ying cried...   \n",
+       "79707  Geely has approached the North Automotive Grou...   \n",
+       "\n",
+       "                                               title2_en      label  \n",
+       "0      A good girl married to non-married qin lang th...  unrelated  \n",
+       "1      Li Xiaolu wants to change his ex-wife? Jia Lia...     agreed  \n",
+       "2      Aunty, do not want a dowry to feel that your f...  unrelated  \n",
+       "3      To pass on thousands of lard, why has everyone...  unrelated  \n",
+       "4       Toona contains nitrite too much to cause cancer?  disagreed  \n",
+       "...                                                  ...        ...  \n",
+       "79703  Zhenjiang parents pay attention, Zhenjiang fri...  unrelated  \n",
+       "79704  \"Deep rain\" is about to be remade by Zhao Liyi...     agreed  \n",
+       "79705  Central Bank clarifies no written notice requi...  unrelated  \n",
+       "79706  After the imprisonment, Yang Yu-ying sang the ...     agreed  \n",
+       "79707  Daimler talks about investing in volvo / tesla...  unrelated  \n",
+       "\n",
+       "[79708 rows x 9 columns]"
+      ],
+      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>index</th>\n      <th>id</th>\n      <th>tid1</th>\n      <th>tid2</th>\n      <th>title1_zh</th>\n      <th>title2_zh</th>\n      <th>title1_en</th>\n      <th>title2_en</th>\n      <th>label</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>315439</td>\n      <td>316073</td>\n      <td>165966</td>\n      <td>165969</td>\n      <td>苏有朋要结婚了，但网友觉得他还是和林心如比较合适</td>\n      <td>好闺蜜结婚给不婚族的秦岚扔花球，倒霉的秦岚掉水里笑哭苏有朋！</td>\n      <td>Su Youpeng is getting married, but netizens fe...</td>\n      <td>A good girl married to non-married qin lang th...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>254508</td>\n      <td>255080</td>\n      <td>147474</td>\n      <td>136497</td>\n      <td>爆料李小璐要成前妻了贾乃亮模仿王宝强一步到位、快刀斩乱麻！</td>\n      <td>李小璐要变前妻了？贾乃亮可能效仿王宝强当机立断，快刀斩乱麻！</td>\n      <td>Li Xiaolu wants to become ex-wife Jia Lianglia...</td>\n      <td>Li Xiaolu wants to change his ex-wife? Jia Lia...</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>59810</td>\n      <td>59964</td>\n      <td>51716</td>\n      <td>51724</td>\n      <td>为彩礼，母亲把女儿嫁给陌生男子，十年后再见面，母亲湿了眼眶</td>\n      <td>阿姨，不要彩礼是觉得你家穷，给你台阶下，不要以为我嫁不出去！</td>\n      <td>For the dowry, the mother married the daughter...</td>\n      <td>Aunty, do not want a dowry to feel that your f...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>258278</td>\n      <td>258856</td>\n      <td>148597</td>\n      <td>36079</td>\n      <td>猪油是个宝，一勺猪油等于十副药，先备起来再说</td>\n      <td>传承千百的猪油为何变得人人唯恐避之不及？揭开猪油的四大谣言！</td>\n      <td>lard is a treasure. A spoonful of lard is ten ...</td>\n      <td>To pass on thousands of lard, why has everyone...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>103502</td>\n      <td>103784</td>\n      <td>79487</td>\n      <td>70738</td>\n      <td>剖析：香椿，为什么会致癌？</td>\n      <td>香椿含亚硝酸盐多吃会致癌？测完发现是谣言</td>\n      <td>Analysis: Toona, why cause cancer?</td>\n      <td>Toona contains nitrite too much to cause cancer?</td>\n      <td>disagreed</td>\n    </tr>\n    <tr>\n      <th>...</th>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n    </tr>\n    <tr>\n      <th>79703</th>\n      <td>198584</td>\n      <td>198996</td>\n      <td>127147</td>\n      <td>107502</td>\n      <td>据说江苏最应该合并的两个城市，打造特大城市即将超越苏州</td>\n      <td>镇江家长注意啦，镇江朋友圈流传100多人偷孩子挖器官系谣言</td>\n      <td>It is said that jiangsu should merge the two c...</td>\n      <td>Zhenjiang parents pay attention, Zhenjiang fri...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>79704</th>\n      <td>120512</td>\n      <td>120832</td>\n      <td>29793</td>\n      <td>29771</td>\n      <td>听说《情深深雨蒙蒙》要准备翻拍？王凯、赵丽颖都将出演？</td>\n      <td>《情深深雨蒙蒙》即将被翻拍 赵丽颖饰演依萍能否战胜赵薇？</td>\n      <td>I heard that \"deep rain\" is preparing for a re...</td>\n      <td>\"Deep rain\" is about to be remade by Zhao Liyi...</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>79705</th>\n      <td>201484</td>\n      <td>201886</td>\n      <td>128323</td>\n      <td>958</td>\n      <td>支付宝重磅功能蚂蚁借呗被关闭，网友：借的钱不用还了吗？</td>\n      <td>央行澄清：并未书面通知要求删除无现金字眼</td>\n      <td>Pay treasure big function ant borrow it is clo...</td>\n      <td>Central Bank clarifies no written notice requi...</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>79706</th>\n      <td>237475</td>\n      <td>238002</td>\n      <td>141508</td>\n      <td>141505</td>\n      <td>毛宁入狱，杨钰莹哭到断肠为他唱这首歌，毛宁在狱中抱头痛哭</td>\n      <td>毛宁，入狱后杨钰莹含泪唱出这首歌，唱哭毛宁</td>\n      <td>While Miriam was in prison, Yang Yu-ying cried...</td>\n      <td>After the imprisonment, Yang Yu-ying sang the ...</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>79707</th>\n      <td>119721</td>\n      <td>120033</td>\n      <td>89233</td>\n      <td>55602</td>\n      <td>吉利已经接洽北汽集团 洽谈收购股权事宜</td>\n      <td>戴姆勒辟谣入股沃尔沃/特斯拉将在中国设“超级工厂”</td>\n      <td>Geely has approached the North Automotive Grou...</td>\n      <td>Daimler talks about investing in volvo / tesla...</td>\n      <td>unrelated</td>\n    </tr>\n  </tbody>\n</table>\n<p>79708 rows × 9 columns</p>\n</div>"
+     },
+     "metadata": {},
+     "execution_count": 35
+    }
+   ],
+   "source": [
+    "df_train_2 = df_train_2.reset_index()\n",
+    "df_train_2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 36,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "                           title1_zh                       title2_zh  \\\n",
+       "0           苏有朋要结婚了，但网友觉得他还是和林心如比较合适  好闺蜜结婚给不婚族的秦岚扔花球，倒霉的秦岚掉水里笑哭苏有朋！   \n",
+       "1      爆料李小璐要成前妻了贾乃亮模仿王宝强一步到位、快刀斩乱麻！  李小璐要变前妻了？贾乃亮可能效仿王宝强当机立断，快刀斩乱麻！   \n",
+       "2      为彩礼，母亲把女儿嫁给陌生男子，十年后再见面，母亲湿了眼眶  阿姨，不要彩礼是觉得你家穷，给你台阶下，不要以为我嫁不出去！   \n",
+       "3             猪油是个宝，一勺猪油等于十副药，先备起来再说  传承千百的猪油为何变得人人唯恐避之不及？揭开猪油的四大谣言！   \n",
+       "4                      剖析：香椿，为什么会致癌？            香椿含亚硝酸盐多吃会致癌？测完发现是谣言   \n",
+       "...                              ...                             ...   \n",
+       "79703    据说江苏最应该合并的两个城市，打造特大城市即将超越苏州   镇江家长注意啦，镇江朋友圈流传100多人偷孩子挖器官系谣言   \n",
+       "79704    听说《情深深雨蒙蒙》要准备翻拍？王凯、赵丽颖都将出演？    《情深深雨蒙蒙》即将被翻拍 赵丽颖饰演依萍能否战胜赵薇？   \n",
+       "79705    支付宝重磅功能蚂蚁借呗被关闭，网友：借的钱不用还了吗？            央行澄清：并未书面通知要求删除无现金字眼   \n",
+       "79706   毛宁入狱，杨钰莹哭到断肠为他唱这首歌，毛宁在狱中抱头痛哭           毛宁，入狱后杨钰莹含泪唱出这首歌，唱哭毛宁   \n",
+       "79707            吉利已经接洽北汽集团 洽谈收购股权事宜       戴姆勒辟谣入股沃尔沃/特斯拉将在中国设“超级工厂”   \n",
+       "\n",
+       "           label  \n",
+       "0      unrelated  \n",
+       "1         agreed  \n",
+       "2      unrelated  \n",
+       "3      unrelated  \n",
+       "4      disagreed  \n",
+       "...          ...  \n",
+       "79703  unrelated  \n",
+       "79704     agreed  \n",
+       "79705  unrelated  \n",
+       "79706     agreed  \n",
+       "79707  unrelated  \n",
+       "\n",
+       "[79708 rows x 3 columns]"
+      ],
+      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>title1_zh</th>\n      <th>title2_zh</th>\n      <th>label</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>苏有朋要结婚了，但网友觉得他还是和林心如比较合适</td>\n      <td>好闺蜜结婚给不婚族的秦岚扔花球，倒霉的秦岚掉水里笑哭苏有朋！</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>爆料李小璐要成前妻了贾乃亮模仿王宝强一步到位、快刀斩乱麻！</td>\n      <td>李小璐要变前妻了？贾乃亮可能效仿王宝强当机立断，快刀斩乱麻！</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>为彩礼，母亲把女儿嫁给陌生男子，十年后再见面，母亲湿了眼眶</td>\n      <td>阿姨，不要彩礼是觉得你家穷，给你台阶下，不要以为我嫁不出去！</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>猪油是个宝，一勺猪油等于十副药，先备起来再说</td>\n      <td>传承千百的猪油为何变得人人唯恐避之不及？揭开猪油的四大谣言！</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>剖析：香椿，为什么会致癌？</td>\n      <td>香椿含亚硝酸盐多吃会致癌？测完发现是谣言</td>\n      <td>disagreed</td>\n    </tr>\n    <tr>\n      <th>...</th>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n    </tr>\n    <tr>\n      <th>79703</th>\n      <td>据说江苏最应该合并的两个城市，打造特大城市即将超越苏州</td>\n      <td>镇江家长注意啦，镇江朋友圈流传100多人偷孩子挖器官系谣言</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>79704</th>\n      <td>听说《情深深雨蒙蒙》要准备翻拍？王凯、赵丽颖都将出演？</td>\n      <td>《情深深雨蒙蒙》即将被翻拍 赵丽颖饰演依萍能否战胜赵薇？</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>79705</th>\n      <td>支付宝重磅功能蚂蚁借呗被关闭，网友：借的钱不用还了吗？</td>\n      <td>央行澄清：并未书面通知要求删除无现金字眼</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>79706</th>\n      <td>毛宁入狱，杨钰莹哭到断肠为他唱这首歌，毛宁在狱中抱头痛哭</td>\n      <td>毛宁，入狱后杨钰莹含泪唱出这首歌，唱哭毛宁</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>79707</th>\n      <td>吉利已经接洽北汽集团 洽谈收购股权事宜</td>\n      <td>戴姆勒辟谣入股沃尔沃/特斯拉将在中国设“超级工厂”</td>\n      <td>unrelated</td>\n    </tr>\n  </tbody>\n</table>\n<p>79708 rows × 3 columns</p>\n</div>"
+     },
+     "metadata": {},
+     "execution_count": 36
+    }
+   ],
+   "source": [
+    "df_train_2 = df_train_2.loc[:, ['title1_zh', 'title2_zh', 'label']]\n",
+    "df_train_2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "                              text_a                          text_b  \\\n",
+       "0           苏有朋要结婚了，但网友觉得他还是和林心如比较合适  好闺蜜结婚给不婚族的秦岚扔花球，倒霉的秦岚掉水里笑哭苏有朋！   \n",
+       "1      爆料李小璐要成前妻了贾乃亮模仿王宝强一步到位、快刀斩乱麻！  李小璐要变前妻了？贾乃亮可能效仿王宝强当机立断，快刀斩乱麻！   \n",
+       "2      为彩礼，母亲把女儿嫁给陌生男子，十年后再见面，母亲湿了眼眶  阿姨，不要彩礼是觉得你家穷，给你台阶下，不要以为我嫁不出去！   \n",
+       "3             猪油是个宝，一勺猪油等于十副药，先备起来再说  传承千百的猪油为何变得人人唯恐避之不及？揭开猪油的四大谣言！   \n",
+       "4                      剖析：香椿，为什么会致癌？            香椿含亚硝酸盐多吃会致癌？测完发现是谣言   \n",
+       "...                              ...                             ...   \n",
+       "79703    据说江苏最应该合并的两个城市，打造特大城市即将超越苏州   镇江家长注意啦，镇江朋友圈流传100多人偷孩子挖器官系谣言   \n",
+       "79704    听说《情深深雨蒙蒙》要准备翻拍？王凯、赵丽颖都将出演？    《情深深雨蒙蒙》即将被翻拍 赵丽颖饰演依萍能否战胜赵薇？   \n",
+       "79705    支付宝重磅功能蚂蚁借呗被关闭，网友：借的钱不用还了吗？            央行澄清：并未书面通知要求删除无现金字眼   \n",
+       "79706   毛宁入狱，杨钰莹哭到断肠为他唱这首歌，毛宁在狱中抱头痛哭           毛宁，入狱后杨钰莹含泪唱出这首歌，唱哭毛宁   \n",
+       "79707            吉利已经接洽北汽集团 洽谈收购股权事宜       戴姆勒辟谣入股沃尔沃/特斯拉将在中国设“超级工厂”   \n",
+       "\n",
+       "           label  \n",
+       "0      unrelated  \n",
+       "1         agreed  \n",
+       "2      unrelated  \n",
+       "3      unrelated  \n",
+       "4      disagreed  \n",
+       "...          ...  \n",
+       "79703  unrelated  \n",
+       "79704     agreed  \n",
+       "79705  unrelated  \n",
+       "79706     agreed  \n",
+       "79707  unrelated  \n",
+       "\n",
+       "[79708 rows x 3 columns]"
+      ],
+      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>text_a</th>\n      <th>text_b</th>\n      <th>label</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>苏有朋要结婚了，但网友觉得他还是和林心如比较合适</td>\n      <td>好闺蜜结婚给不婚族的秦岚扔花球，倒霉的秦岚掉水里笑哭苏有朋！</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>爆料李小璐要成前妻了贾乃亮模仿王宝强一步到位、快刀斩乱麻！</td>\n      <td>李小璐要变前妻了？贾乃亮可能效仿王宝强当机立断，快刀斩乱麻！</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>为彩礼，母亲把女儿嫁给陌生男子，十年后再见面，母亲湿了眼眶</td>\n      <td>阿姨，不要彩礼是觉得你家穷，给你台阶下，不要以为我嫁不出去！</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>猪油是个宝，一勺猪油等于十副药，先备起来再说</td>\n      <td>传承千百的猪油为何变得人人唯恐避之不及？揭开猪油的四大谣言！</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>剖析：香椿，为什么会致癌？</td>\n      <td>香椿含亚硝酸盐多吃会致癌？测完发现是谣言</td>\n      <td>disagreed</td>\n    </tr>\n    <tr>\n      <th>...</th>\n      <td>...</td>\n      <td>...</td>\n      <td>...</td>\n    </tr>\n    <tr>\n      <th>79703</th>\n      <td>据说江苏最应该合并的两个城市，打造特大城市即将超越苏州</td>\n      <td>镇江家长注意啦，镇江朋友圈流传100多人偷孩子挖器官系谣言</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>79704</th>\n      <td>听说《情深深雨蒙蒙》要准备翻拍？王凯、赵丽颖都将出演？</td>\n      <td>《情深深雨蒙蒙》即将被翻拍 赵丽颖饰演依萍能否战胜赵薇？</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>79705</th>\n      <td>支付宝重磅功能蚂蚁借呗被关闭，网友：借的钱不用还了吗？</td>\n      <td>央行澄清：并未书面通知要求删除无现金字眼</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>79706</th>\n      <td>毛宁入狱，杨钰莹哭到断肠为他唱这首歌，毛宁在狱中抱头痛哭</td>\n      <td>毛宁，入狱后杨钰莹含泪唱出这首歌，唱哭毛宁</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>79707</th>\n      <td>吉利已经接洽北汽集团 洽谈收购股权事宜</td>\n      <td>戴姆勒辟谣入股沃尔沃/特斯拉将在中国设“超级工厂”</td>\n      <td>unrelated</td>\n    </tr>\n  </tbody>\n</table>\n<p>79708 rows × 3 columns</p>\n</div>"
+     },
+     "metadata": {},
+     "execution_count": 37
+    }
+   ],
+   "source": [
+    "df_train_2.columns = ['text_a', 'text_b', 'label']\n",
+    "df_train_2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 38,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "训练样本数 265693\n"
+     ]
+    },
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "                          text_a                          text_b      label\n",
+       "0       苏有朋要结婚了，但网友觉得他还是和林心如比较合适  好闺蜜结婚给不婚族的秦岚扔花球，倒霉的秦岚掉水里笑哭苏有朋！  unrelated\n",
+       "1  爆料李小璐要成前妻了贾乃亮模仿王宝强一步到位、快刀斩乱麻！  李小璐要变前妻了？贾乃亮可能效仿王宝强当机立断，快刀斩乱麻！     agreed\n",
+       "2  为彩礼，母亲把女儿嫁给陌生男子，十年后再见面，母亲湿了眼眶  阿姨，不要彩礼是觉得你家穷，给你台阶下，不要以为我嫁不出去！  unrelated\n",
+       "3         猪油是个宝，一勺猪油等于十副药，先备起来再说  传承千百的猪油为何变得人人唯恐避之不及？揭开猪油的四大谣言！  unrelated\n",
+       "4                  剖析：香椿，为什么会致癌？            香椿含亚硝酸盐多吃会致癌？测完发现是谣言  disagreed"
+      ],
+      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>text_a</th>\n      <th>text_b</th>\n      <th>label</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>苏有朋要结婚了，但网友觉得他还是和林心如比较合适</td>\n      <td>好闺蜜结婚给不婚族的秦岚扔花球，倒霉的秦岚掉水里笑哭苏有朋！</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>爆料李小璐要成前妻了贾乃亮模仿王宝强一步到位、快刀斩乱麻！</td>\n      <td>李小璐要变前妻了？贾乃亮可能效仿王宝强当机立断，快刀斩乱麻！</td>\n      <td>agreed</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>为彩礼，母亲把女儿嫁给陌生男子，十年后再见面，母亲湿了眼眶</td>\n      <td>阿姨，不要彩礼是觉得你家穷，给你台阶下，不要以为我嫁不出去！</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>猪油是个宝，一勺猪油等于十副药，先备起来再说</td>\n      <td>传承千百的猪油为何变得人人唯恐避之不及？揭开猪油的四大谣言！</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>剖析：香椿，为什么会致癌？</td>\n      <td>香椿含亚硝酸盐多吃会致癌？测完发现是谣言</td>\n      <td>disagreed</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+     },
+     "metadata": {},
+     "execution_count": 38
+    }
+   ],
+   "source": [
+    "df_train_2.to_csv('train.tsv', sep='\\t', index=False)#???\n",
+    "print('训练样本数', len(df_train))\n",
+    "df_train_2.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 41,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "unrelated    0.679957\n",
+       "agreed       0.293283\n",
+       "disagreed    0.026760\n",
+       "Name: label, dtype: float64"
+      ]
+     },
+     "metadata": {},
+     "execution_count": 41
+    }
+   ],
+   "source": [
+    "df_train_2.label.value_counts() / len(df_train_2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 42,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "预测样本数： 80126\n"
+     ]
+    },
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "                            text_a                       text_b      Id\n",
+       "0  萨拉赫人气爆棚!埃及总统大选未参选获百万选票 现任总统压力山大  辟谣！里昂官方否认费基尔加盟利物浦，难道是价格没谈拢？  321187\n",
+       "1              萨达姆被捕后告诫美国的一句话，发人深思    10大最让美国人相信的荒诞谣言，如蜥蜴人掌控着美国  321190\n",
+       "2    萨达姆此项计划没有此国破坏的话，美国还会对伊拉克发动战争吗          萨达姆被捕后告诫美国的一句话，发人深思  321189\n",
+       "3              萨达姆被捕后告诫美国的一句话，发人深思  被绞刑处死的萨达姆是替身？他的此男人举动击破替身谣言！  321193\n",
+       "4              萨达姆被捕后告诫美国的一句话，发人深思         中国川贝枇杷膏在美国受到热捧？纯属谣言！  321191"
+      ],
+      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>text_a</th>\n      <th>text_b</th>\n      <th>Id</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>萨拉赫人气爆棚!埃及总统大选未参选获百万选票 现任总统压力山大</td>\n      <td>辟谣！里昂官方否认费基尔加盟利物浦，难道是价格没谈拢？</td>\n      <td>321187</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>萨达姆被捕后告诫美国的一句话，发人深思</td>\n      <td>10大最让美国人相信的荒诞谣言，如蜥蜴人掌控着美国</td>\n      <td>321190</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>萨达姆此项计划没有此国破坏的话，美国还会对伊拉克发动战争吗</td>\n      <td>萨达姆被捕后告诫美国的一句话，发人深思</td>\n      <td>321189</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>萨达姆被捕后告诫美国的一句话，发人深思</td>\n      <td>被绞刑处死的萨达姆是替身？他的此男人举动击破替身谣言！</td>\n      <td>321193</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>萨达姆被捕后告诫美国的一句话，发人深思</td>\n      <td>中国川贝枇杷膏在美国受到热捧？纯属谣言！</td>\n      <td>321191</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+     },
+     "metadata": {},
+     "execution_count": 42
+    }
+   ],
+   "source": [
+    "df_test = pd.read_csv('test.csv')\n",
+    "df_test = df_test.loc[:, ['title1_zh', 'title2_zh', 'id']]\n",
+    "df_test.columns = ['text_a', 'text_b', 'Id']\n",
+    "df_test.to_csv('test.tsv', sep='\\t', index=False)#???\n",
+    "print('预测样本数：', len(df_test))\n",
+    "df_test.head()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 44,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "测试样本数 / 训练样本数 = 1.0倍\n"
+     ]
+    }
+   ],
+   "source": [
+    "ratio = len(df_test) / len(df_train_2)\n",
+    "print('测试样本数 / 训练样本数 = {:.1f}倍'.format(ratio))"
+   ]
+  },
+  {
+   "source": [
+    "数据集制作"
+   ],
+   "cell_type": "markdown",
+   "metadata": {}
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 45,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "from torch.utils.data import Dataset\n",
+    "\n",
+    "class FakeNewsDateset(Dataset):\n",
+    "\n",
+    "    \n",
+    "    #读取处理后的 tsv 并初始化一些参数\n",
+    "    def __init__(self, mode, tokenizer):\n",
+    "        assert mode in ['train', 'test'] \n",
+    "        \n",
+    "        self.mode = mode\n",
+    "        self.df = pd.read_csv(mode + '.tsv', sep='\\t').fillna('')#???\n",
+    "        self.len = len(self.df)\n",
+    "        self.label_map = {'agreed':0, 'disagreed':1, 'unrelated':2}\n",
+    "        self.tokenizer = tokenizer\n",
+    "\n",
+    "    # 定义回传一笔数据\n",
+    "    #@pysnooper.snoop()??\n",
+    "    def __getitem__(self, idx):\n",
+    "        \n",
+    "        if self.mode == 'test':\n",
+    "            text_a, text_b = self.df.iloc[idx, :2].values\n",
+    "            label_tensor = None\n",
+    "        else:\n",
+    "            text_a, text_b, label = self.df.iloc[idx, :].values\n",
+    "            #将label文字也转换成索引 方便转换成tensor\n",
+    "            label_id = self.label_map[label]\n",
+    "            label_tensor = torch.tensor(label_id)\n",
+    "        \n",
+    "        #建立第一个句子的 BERT tokens 并加入分隔符 [SEP]\n",
+    "        word_pieces = ['[CLS]']\n",
+    "        tokens_a = self.tokenizer.tokenize(text_a)\n",
+    "        word_pieces += tokens_a + ['[SEP]']\n",
+    "        len_a = len(word_pieces)\n",
+    "\n",
+    "        #第二个句子的 BERT tokens\n",
+    "        tokens_b = self.tokenizer.tokenize(text_b)\n",
+    "        word_pieces += tokens_b + ['[SEP]']\n",
+    "        len_b = len(word_pieces) - len_a\n",
+    "        \n",
+    "        #将整个token序列 转换成 索引序列\n",
+    "        ids = self.tokenizer.convert_tokens_to_ids(word_pieces)\n",
+    "        tokens_tensor = torch.tensor(ids)\n",
+    "\n",
+    "        #将第一句包含 [SEP] 的 token 位置设为0，其他为1，表示第二句\n",
+    "        segments_tensors = torch.tensor([0]*len_a + [1]*len_b, dtype=torch.long)\n",
+    "        return (tokens_tensor, segments_tensors, label_tensor)\n",
+    "\n",
+    "    def __len__(self):\n",
+    "        return self.len\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 46,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "trainset = FakeNewsDateset('train', tokenizer=tokenizer)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 47,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "'[CLS]苏有朋要结婚了，但网友觉得他还是和林心如比较合适[SEP]好闺蜜结婚给不婚族的秦岚扔花球，倒霉的秦岚掉水里笑哭苏有朋！[SEP]'"
+      ]
+     },
+     "metadata": {},
+     "execution_count": 47
+    }
+   ],
+   "source": [
+    "sample_idx = 0\n",
+    "\n",
+    "# 將原始文本拿出做比較\n",
+    "text_a, text_b, label = trainset.df.iloc[sample_idx].values\n",
+    "\n",
+    "# 利用剛剛建立的 Dataset 取出轉換後的 id tensors\n",
+    "tokens_tensor, segments_tensor, label_tensor = trainset[sample_idx]\n",
+    "\n",
+    "tokens = tokenizer.convert_ids_to_tokens(tokens_tensor.tolist())\n",
+    "combined_text = ''.join(tokens)\n",
+    "combined_text"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 48,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "[原始文本]\n句子 1：苏有朋要结婚了，但网友觉得他还是和林心如比较合适\n句子 2：好闺蜜结婚给不婚族的秦岚扔花球，倒霉的秦岚掉水里笑哭苏有朋！\n分類  ：unrelated\n\n--------------------\n\n[Dataset 回传的 tensors]\ntokens_tensor  ：tensor([ 101, 5722, 3300, 3301, 6206, 5310, 2042,  749, 8024,  852, 5381, 1351,\n        6230, 2533,  800, 6820, 3221, 1469, 3360, 2552, 1963, 3683, 6772, 1394,\n        6844,  102, 1962, 7318, 6057, 5310, 2042, 5314,  679, 2042, 3184, 4638,\n        4912, 2269, 2803, 5709, 4413, 8024,  948, 7450, 4638, 4912, 2269, 2957,\n        3717, 7027, 5010, 1526, 5722, 3300, 3301, 8013,  102])\n\nsegments_tensor：tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,\n        0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,\n        1, 1, 1, 1, 1, 1, 1, 1, 1])\n\nlabel_tensor   ：2\n\n--------------------\n\n[还原 tokens_tensors]\n[CLS]苏有朋要结婚了，但网友觉得他还是和林心如比较合适[SEP]好闺蜜结婚给不婚族的秦岚扔花球，倒霉的秦岚掉水里笑哭苏有朋！[SEP]\n\n"
+     ]
+    }
+   ],
+   "source": [
+    "#???\n",
+    "print(f\"\"\"[原始文本]\n",
+    "句子 1：{text_a}\n",
+    "句子 2：{text_b}\n",
+    "分類  ：{label}\n",
+    "\n",
+    "--------------------\n",
+    "\n",
+    "[Dataset 回传的 tensors]\n",
+    "tokens_tensor  ：{tokens_tensor}\n",
+    "\n",
+    "segments_tensor：{segments_tensor}\n",
+    "\n",
+    "label_tensor   ：{label_tensor}\n",
+    "\n",
+    "--------------------\n",
+    "\n",
+    "[还原 tokens_tensors]\n",
+    "{combined_text}\n",
+    "\"\"\")"
+   ]
+  },
+  {
+   "source": [
+    "制作mini-batch DataLoader"
+   ],
+   "cell_type": "markdown",
+   "metadata": {}
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 49,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from torch.utils.data import DataLoader\n",
+    "from torch.nn.utils.rnn import pad_sequence"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 50,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def create_mini_batch(samples):\n",
+    "    tokens_tensors = [s[0] for s in samples]\n",
+    "    segments_tensors = [s[1] for s in samples]\n",
+    "\n",
+    "    # 测试集有labels\n",
+    "    if samples[0][2] is not None:\n",
+    "        #?torch.stack\n",
+    "        #与torch.concat区别\n",
+    "        label_ids = torch.stack([s[2] for s in samples])\n",
+    "    else:\n",
+    "        label_ids = None\n",
+    "\n",
+    "    #zero pad到同一序列长度\n",
+    "    #pad_sequence\n",
+    "    tokens_tensors = pad_sequence(tokens_tensors, batch_first=True)\n",
+    "    segments_tensors = pad_sequence(segments_tensors, batch_first=True)\n",
+    "\n",
+    "    #attention masks 将 tokens_tensors 里头不为 zero padding \n",
+    "    #的位置 设为1 让BERT只关注这些位置的 tokens\n",
+    "    masks_tensors = torch.zeros(tokens_tensors.shape, dtype=torch.long)\n",
+    "\n",
+    "    masks_tensors = masks_tensors.masked_fill(tokens_tensors != 0, 1)\n",
+    "    \n",
+    "    return tokens_tensors, segments_tensors, masks_tensors, label_ids\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 51,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "batch_size = 64\n",
+    "trainloader = DataLoader(trainset, batch_size=batch_size, collate_fn=create_mini_batch)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 52,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "\ntokens_tensors.shape = torch.Size([64, 63])\ntensor([[ 101, 5722, 3300,  ...,    0,    0,    0],\n        [ 101, 4255, 3160,  ..., 8013,  102,    0],\n        [ 101,  711, 2506,  ..., 8013,  102,    0],\n        ...,\n        [ 101,  671, 2157,  ...,    0,    0,    0],\n        [ 101, 1380,  677,  ...,    0,    0,    0],\n        [ 101, 2458, 1853,  ...,    0,    0,    0]])\n-----------------------\n\nsegments_tensors.shape = torch.Size([64, 63])\ntensor([[0, 0, 0,  ..., 0, 0, 0],\n        [0, 0, 0,  ..., 1, 1, 0],\n        [0, 0, 0,  ..., 1, 1, 0],\n        ...,\n        [0, 0, 0,  ..., 0, 0, 0],\n        [0, 0, 0,  ..., 0, 0, 0],\n        [0, 0, 0,  ..., 0, 0, 0]])\n-----------------------\n\nmasks_tensors.shape = torch.Size([64, 63])\ntensor([[1, 1, 1,  ..., 0, 0, 0],\n        [1, 1, 1,  ..., 1, 1, 0],\n        [1, 1, 1,  ..., 1, 1, 0],\n        ...,\n        [1, 1, 1,  ..., 0, 0, 0],\n        [1, 1, 1,  ..., 0, 0, 0],\n        [1, 1, 1,  ..., 0, 0, 0]])\n-----------------------\n\nlabel_ids.shape = torch.Size([64])\ntensor([2, 0, 2, 2, 1, 2, 0, 2, 2, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2,\n        2, 2, 2, 2, 0, 2, 2, 2, 2, 1, 2, 0, 2, 0, 2, 2, 2, 2, 2, 0, 2, 2, 2, 0,\n        0, 2, 0, 2, 2, 0, 2, 2, 0, 2, 2, 0, 0, 2, 0, 0])\n\n"
+     ]
+    }
+   ],
+   "source": [
+    "data = next(iter(trainloader))\n",
+    "tokens_tensors, segments_tensors, masks_tensors, label_ids = data\n",
+    "\n",
+    "print(f'''\n",
+    "tokens_tensors.shape = {tokens_tensors.shape}\n",
+    "{tokens_tensors}\n",
+    "-----------------------\n",
+    "\n",
+    "segments_tensors.shape = {segments_tensors.shape}\n",
+    "{segments_tensors}\n",
+    "-----------------------\n",
+    "\n",
+    "masks_tensors.shape = {masks_tensors.shape}\n",
+    "{masks_tensors}\n",
+    "-----------------------\n",
+    "\n",
+    "label_ids.shape = {label_ids.shape}\n",
+    "{label_ids}\n",
+    "''')\n",
+    "#为什么是63\n",
+    "#是pad自动按照最长的补全吗？"
+   ]
+  },
+  {
+   "source": [
+    "模型"
+   ],
+   "cell_type": "markdown",
+   "metadata": {}
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 53,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stderr",
+     "text": [
+      "Some weights of the model checkpoint at ./models/ were not used when initializing BertForSequenceClassification: ['cls.predictions.bias', 'cls.predictions.transform.dense.weight', 'cls.predictions.transform.dense.bias', 'cls.predictions.decoder.weight', 'cls.seq_relationship.weight', 'cls.seq_relationship.bias', 'cls.predictions.transform.LayerNorm.weight', 'cls.predictions.transform.LayerNorm.bias']\n",
+      "- This IS expected if you are initializing BertForSequenceClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPretraining model).\n",
+      "- This IS NOT expected if you are initializing BertForSequenceClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).\n",
+      "Some weights of BertForSequenceClassification were not initialized from the model checkpoint at ./models/ and are newly initialized: ['classifier.weight', 'classifier.bias']\n",
+      "You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.\n"
+     ]
+    }
+   ],
+   "source": [
+    "#载入 中文分类任务 模型\n",
+    "from transformers import BertForSequenceClassification\n",
+    "per_train_path = './models/'\n",
+    "\n",
+    "num_labels = 3\n",
+    "\n",
+    "model = BertForSequenceClassification.from_pretrained(per_train_path, num_labels=num_labels)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 54,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "\nname                    module\n------------------------------\n\nbert:embeddings\nbert:encoder\nbert:pooler\ndropout         Dropout(p=0.1, inplace=False)\nclassifier      Linear(in_features=768, out_features=3, bias=True)\n"
+     ]
+    }
+   ],
+   "source": [
+    "print('''\n",
+    "name                    module\n",
+    "------------------------------\n",
+    "''') #?\n",
+    "\n",
+    "for name, module in model.named_children():\n",
+    "    if name == 'bert':\n",
+    "        for n, _ in module.named_children():\n",
+    "            print(f'{name}:{n}')\n",
+    "    else:\n",
+    "        print('{:15} {}'.format(name, module))\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 55,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "BertConfig {\n",
+       "  \"_name_or_path\": \"./models/\",\n",
+       "  \"architectures\": [\n",
+       "    \"BertForMaskedLM\"\n",
+       "  ],\n",
+       "  \"attention_probs_dropout_prob\": 0.1,\n",
+       "  \"directionality\": \"bidi\",\n",
+       "  \"gradient_checkpointing\": false,\n",
+       "  \"hidden_act\": \"gelu\",\n",
+       "  \"hidden_dropout_prob\": 0.1,\n",
+       "  \"hidden_size\": 768,\n",
+       "  \"id2label\": {\n",
+       "    \"0\": \"LABEL_0\",\n",
+       "    \"1\": \"LABEL_1\",\n",
+       "    \"2\": \"LABEL_2\"\n",
+       "  },\n",
+       "  \"initializer_range\": 0.02,\n",
+       "  \"intermediate_size\": 3072,\n",
+       "  \"label2id\": {\n",
+       "    \"LABEL_0\": 0,\n",
+       "    \"LABEL_1\": 1,\n",
+       "    \"LABEL_2\": 2\n",
+       "  },\n",
+       "  \"layer_norm_eps\": 1e-12,\n",
+       "  \"max_position_embeddings\": 512,\n",
+       "  \"model_type\": \"bert\",\n",
+       "  \"num_attention_heads\": 12,\n",
+       "  \"num_hidden_layers\": 12,\n",
+       "  \"pad_token_id\": 0,\n",
+       "  \"pooler_fc_size\": 768,\n",
+       "  \"pooler_num_attention_heads\": 12,\n",
+       "  \"pooler_num_fc_layers\": 3,\n",
+       "  \"pooler_size_per_head\": 128,\n",
+       "  \"pooler_type\": \"first_token_transform\",\n",
+       "  \"type_vocab_size\": 2,\n",
+       "  \"vocab_size\": 21128\n",
+       "}"
+      ]
+     },
+     "metadata": {},
+     "execution_count": 55
+    }
+   ],
+   "source": [
+    "model.config"
+   ]
+  },
+  {
+   "source": [
+    "定义模型预测结果"
+   ],
+   "cell_type": "markdown",
+   "metadata": {}
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 56,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def get_predictions(model, dataloader, compute_acc=False):\n",
+    "    predictions = None\n",
+    "    correct = 0\n",
+    "    total = 0\n",
+    "\n",
+    "    with torch.no_grad():\n",
+    "\n",
+    "        for data in dataloader:\n",
+    "            if next(model.parameters()).is_cuda:\n",
+    "                data = [t.to('cuda:3') for t in data if t is not None]\n",
+    "\n",
+    "                tokens_tensors, segments_tensors, masks_tensors = data[:3]\n",
+    "                outputs = model(input_ids=tokens_tensors, \n",
+    "                token_type_ids=segments_tensors,\n",
+    "                attention_mask=masks_tensors)\n",
+    "\n",
+    "                logits = outputs[0]\n",
+    "\n",
+    "                _, pred = torch.max(logits.data, 1)\n",
+    "\n",
+    "                if compute_acc:\n",
+    "                    labels = data[3]\n",
+    "                    total += labels.size(0)\n",
+    "                    correct += (pred == labels).sum().item()\n",
+    "\n",
+    "                if predictions is None:\n",
+    "                    predictions = pred\n",
+    "                else:\n",
+    "                    #??\n",
+    "                    predictions = torch.cat((predictions, pred))\n",
+    "            \n",
+    "    if compute_acc:\n",
+    "        acc = correct / total\n",
+    "        return predictions, acc\n",
+    "    return predictions\n",
+    "\n",
+    "\n",
+    "                \n"
+   ]
+  },
+  {
+   "source": [
+    "模型跑在gpu上，并取得分类准确率"
+   ],
+   "cell_type": "markdown",
+   "metadata": {}
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 57,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "device: cuda:3\n",
+      "classification acc: 0.4408591358458373\n"
+     ]
+    }
+   ],
+   "source": [
+    "device = torch.device('cuda:3' if torch.cuda.is_available() else 'cpu')\n",
+    "print('device:', device)\n",
+    "model = model.to(device)\n",
+    "_, acc = get_predictions(model, trainloader, compute_acc=True)\n",
+    "print('classification acc:', acc)"
+   ]
+  },
+  {
+   "source": [
+    "得到模型参数"
+   ],
+   "cell_type": "markdown",
+   "metadata": {}
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 58,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "\n整个分类模型的参数量：102269955\n线性分类器的参数量：2307\n\n"
+     ]
+    }
+   ],
+   "source": [
+    "def get_learnable_param(module):\n",
+    "    return [p for p in module.parameters() if p.requires_grad]\n",
+    "\n",
+    "model_params = get_learnable_param(model)\n",
+    "clf_params = get_learnable_param(model.classifier)\n",
+    "\n",
+    "print(f'''\n",
+    "整个分类模型的参数量：{sum(p.numel() for p in model_params)}\n",
+    "线性分类器的参数量：{sum(p.numel() for p in clf_params)}\n",
+    "''')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 59,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "[epoch 1] loss: 417.196, acc: 0.888\n",
+      "[epoch 2] loss: 317.833, acc: 0.915\n",
+      "[epoch 3] loss: 259.841, acc: 0.933\n",
+      "[epoch 4] loss: 212.046, acc: 0.945\n",
+      "[epoch 5] loss: 172.230, acc: 0.960\n",
+      "[epoch 6] loss: 137.458, acc: 0.966\n",
+      "[epoch 7] loss: 115.965, acc: 0.973\n",
+      "[epoch 8] loss: 93.125, acc: 0.975\n",
+      "[epoch 9] loss: 76.522, acc: 0.977\n",
+      "[epoch 10] loss: 66.048, acc: 0.981\n"
+     ]
+    }
+   ],
+   "source": [
+    "model.train()\n",
+    "\n",
+    "optimizer = torch.optim.Adam(model.parameters(), lr=1e-5)\n",
+    "\n",
+    "epoch = 10\n",
+    "\n",
+    "for epoch in range(epoch):\n",
+    "\n",
+    "    running_loss = 0.0\n",
+    "    for data in trainloader:\n",
+    "\n",
+    "        tokens_tensors, segments_tensors, masks_tensors, labels = [t.to(device) for t in data]\n",
+    "\n",
+    "        optimizer.zero_grad()\n",
+    "\n",
+    "        #forward pass\n",
+    "        outputs = model(input_ids=tokens_tensors, \n",
+    "        token_type_ids=segments_tensors, \n",
+    "        attention_mask=masks_tensors, \n",
+    "        labels=labels)\n",
+    "\n",
+    "        loss = outputs[0]\n",
+    "\n",
+    "        #backward\n",
+    "        loss.backward()\n",
+    "        optimizer.step()\n",
+    "\n",
+    "        running_loss += loss.item()\n",
+    "\n",
+    "        #计算准确率\n",
+    "    _, acc = get_predictions(model, trainloader, compute_acc=True)\n",
+    "    print('[epoch %d] loss: %.3f, acc: %.3f' % (epoch+1, running_loss, acc))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 60,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "       Id   Category\n",
+       "0  321187  unrelated\n",
+       "1  321190  unrelated\n",
+       "2  321189  unrelated\n",
+       "3  321193  unrelated\n",
+       "4  321191  unrelated"
+      ],
+      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Id</th>\n      <th>Category</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>321187</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>321190</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>2</th>\n      <td>321189</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>3</th>\n      <td>321193</td>\n      <td>unrelated</td>\n    </tr>\n    <tr>\n      <th>4</th>\n      <td>321191</td>\n      <td>unrelated</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+     },
+     "metadata": {},
+     "execution_count": 60
+    }
+   ],
+   "source": [
+    "testset = FakeNewsDateset('test', tokenizer=tokenizer)\n",
+    "\n",
+    "testloader = DataLoader(testset, batch_size=256, collate_fn=create_mini_batch)\n",
+    "\n",
+    "predictions = get_predictions(model, testloader)\n",
+    "\n",
+    "index_map = {v: k for k, v in testset.label_map.items()}\n",
+    "\n",
+    "df = pd.DataFrame({'Category':predictions.tolist()})\n",
+    "\n",
+    "df['Category'] = df.Category.apply(lambda x: index_map[x])\n",
+    "\n",
+    "df_pred = pd.concat([testset.df.loc[:, [\"Id\"]],\n",
+    "                    df.loc[:, 'Category']], axis=1)\n",
+    "\n",
+    "df_pred.to_csv('bert_1_prec_training_samples.csv', index=False)\n",
+    "df_pred.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "192.05"
+      ]
+     },
+     "metadata": {},
+     "execution_count": 1
+    }
+   ],
+   "source": [
+    "11523/60"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "8.0"
+      ]
+     },
+     "metadata": {},
+     "execution_count": 3
+    }
+   ],
+   "source": [
+    "192/24"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ]
+}

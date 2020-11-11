@@ -47,6 +47,9 @@ BERT理解
 
 3. [请问GPT为什么不能双向？](https://www.zhihu.com/question/322034410)
 
+双向的问题
+4. [从语言模型看Bert的善变与GPT的坚守](http://www.tensorinfinity.com/paper_160.html)
+
 
 
 

@@ -237,4 +237,4 @@ optimizer = torch.optim.SGD(model.paremeters(), lr=0.01)
 36. permute
 
 
-
+37. 为什么优化器清零

@@ -10,8 +10,8 @@
 10. sklearn test_split
 11. 数据集shuffle 每一次minibatch都不一样?
 12. batch_normalizaion dropout（李课） batch_norm 一般放到激活函数之后？
-13. Pytorch 交叉熵
-
+13. Pytorch 交叉熵 公式不一样？？？
+14. l2 norm
 
 
 

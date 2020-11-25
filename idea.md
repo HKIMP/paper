@@ -8,17 +8,15 @@
 
 5. Elmo(Bi-Lstm), transformer-XL, XLNET(transformer-xl), ALBERT, RoBERTa DistilBERT
 
-
-
-
-
 6. 自回归 自编码
 
 7. 为什么要用交叉熵啊
 
 8. squad bioasq的数据集格式转换
 
+BioNLP?????
 
+MRR 召回？？？
 
 
 

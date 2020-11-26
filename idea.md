@@ -18,6 +18,9 @@
 
 10. MRR 召回？？？
 
+11. 论文用的 span 那怎么生成 exact answer啊
+
+
 
 
 

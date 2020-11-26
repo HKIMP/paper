@@ -14,6 +14,7 @@
 
 8. squad bioasq的数据集格式转换
 
+9. F1 MRR 各种评价指标
 9. BioNLP?????
 
 10. MRR 召回？？？

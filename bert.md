@@ -34,6 +34,16 @@ BERT 双向？ GPT单向？ BERT用的是Transformers的encoder，GPT用的是Tr
 weight dacay
 
 
+position embedding???怎么去生成
+是自己输入的是 token_tensors, segments_tensor, masks_tensors 然后 分词自动生成 [token_embeddings, segment_embeddings, position_embeddings]
+
+
+
+
+
+
+
+
 BERT源码
 
 1. [Bert代码详解（一）](https://blog.csdn.net/cpluss/article/details/88418176)

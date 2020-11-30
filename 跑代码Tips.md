@@ -47,6 +47,9 @@ conda config --set show_channel_urls yes
 conda install pytorch torchvision cudatoolkit=10.0
 ```
 
+[pytorch 安装](https://blog.csdn.net/watermelon1123/article/details/88122020#11%E6%9C%8826%E6%97%A5%E6%9B%B4%E6%96%B0ubuntu%E4%B8%8Bpytorch1.3%E5%AE%89%E8%A3%85%28%E9%80%9A%E8%BF%87conda%29)
+
+
 - 安装常用库
 
 ```

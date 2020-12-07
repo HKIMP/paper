@@ -21,6 +21,9 @@
 
 11. 论文用的 span 那怎么生成 exact answer啊
 
+12. bioasq 无法回答的问题？？
+
+13. 什么是 open-domain dataset
 
 
 

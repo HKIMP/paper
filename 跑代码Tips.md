@@ -144,4 +144,6 @@ def __init__(self, freeze_bert=False, ...):
 
 
 
-
+在 pylint 中遇到 torch has no member 'xxx' 的错误：
+设置 -> python.linting.pylint:
+/mnt/md1/b532huangkexin/.conda/pkgs/pylint-2.5.3-py38_0/lib/python3.8/site-packages/pylint

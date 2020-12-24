@@ -16,12 +16,20 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple spacy --uesr
 
 解决方法：pip install -U spacy -i https://pypi.tuna.tsinghua.edu.cn/simple
 
+https://github.com/explosion/spaCy/releases
+
+![图 4](images/0beb781b8b09c557a769e99bdb145eeefed7dc73be56babd83033486bf48855f.png)  
+
+下载到服务器 
+
 使用pip install en_core_web_sm-2.3.0.tar.gz 
 
 import spacy
 
 spacy.load('en_core_web_sm')
 
+参考：
+[spacy.en.download 无法下载啊。怎么解决啊。有没有在windows下使用成功的？](https://www.zhihu.com/question/56095738)
 
 
 
@@ -78,7 +86,7 @@ lsof |grep -i deleted（lsof -n | grep deleted）
   conda updata pytorch torchvision -c pytorch
   ~~~
 
-  
+
 
 查看进程
 

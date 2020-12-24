@@ -25,7 +25,9 @@
 
 13. 什么是 open-domain dataset
 
-14. bert之上怎么改进啊
+14. 损失函数用的什么？
+    
+15. bert之上怎么改进啊
 
 
 

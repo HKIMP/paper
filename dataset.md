@@ -17,4 +17,4 @@ list -> F-measure
 
 squad:![图 1](images/6f3a994ccc7f4e471964218776ceb81f13ec1c76b89d7ac7697fc23f4d1a8b06.png)  
 
-
+squad 普遍要 剔除一些 outliers 吗？
